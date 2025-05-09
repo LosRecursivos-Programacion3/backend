@@ -1,0 +1,4 @@
+pucp\edu\pe\pucpconnect\persistence\BaseDAO.class
+pucp\edu\pe\pucpconnect\persistence\BaseDAOImpl.class
+pucp\edu\pe\pucpconnect\persistence\DBManager.class
+pucp\edu\pe\pucpconnect\persistence\PucpConnectPersistence.class
