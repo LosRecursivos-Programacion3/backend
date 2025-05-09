@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS Story_Visualizacion (
   FOREIGN KEY (idUsuario) REFERENCES Alumno(idUsuario)
 );
 
--- 11) Tabla Notificacion
+-- 12) Tabla Notificacion
 DROP TABLE IF EXISTS Notificacion;
 CREATE TABLE IF NOT EXISTS Notificacion (
   idNotificacion INT AUTO_INCREMENT PRIMARY KEY,
