@@ -18,4 +18,6 @@ public interface AlumnoService {
     List<Alumno> listarAlumnos();
 
     void eliminarAlumno(int id);
+
+    /*falta editarPerfil */
 }
