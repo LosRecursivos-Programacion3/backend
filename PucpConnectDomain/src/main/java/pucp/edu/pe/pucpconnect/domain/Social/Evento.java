@@ -59,6 +59,12 @@ public class Evento {
         participantes.add(alumno);
     }
 
+    public void eliminarParticipante(Alumno alumno){
+        if(alumno == null)
+            throw new IllegalArgumentException("Alumno invalido");
+        participantes.remove(alumno);
+    }
+
     public Reaccion agregarReaccion(Alumno usuario, ReaccionTipo tipo) {
         Reaccion r = new Reaccion(0, tipo, LocalDateTime.now(), usuario, this);
         reacciones.add(r);
@@ -120,4 +126,13 @@ public class Evento {
     public void setCreador(Alumno creador) {
         this.creador = creador;
     }
+
+    public List<Alumno> getParticipantes(){
+        return participantes;
+    }
+
+    public void setParticipantes(List<Alumno> participantes){
+        this.participantes = participantes;
+    }
+
 }
