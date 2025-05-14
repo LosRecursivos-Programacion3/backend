@@ -95,8 +95,8 @@ public class Post {
         this.estado = estado;
     }
 
-    public Alumno getAutor() {
-        return autor;
+    public int getAutor() {
+        return 1;
     }
 
     public void setAutor(Alumno autor) {
