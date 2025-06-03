@@ -4,7 +4,9 @@ C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\
 C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\dao\Interacciones\MensajeDAO.java
 C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\dao\Interacciones\ReaccionDAO.java
 C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\dao\Social\EventoDAO.java
+C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\dao\Social\NotificacionDAO.java
 C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\dao\Social\PostDAO.java
+C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\dao\Social\StoryDAO.java
 C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\dao\Usuarios\AdministradorDAO.java
 C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\dao\Usuarios\AlumnoDAO.java
 C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\dao\Usuarios\InteresDAO.java
@@ -13,7 +15,9 @@ C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\
 C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\daoimpl\Interacciones\MensajeDAOImpl.java
 C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\daoimpl\Interacciones\ReaccionDAOImpl.java
 C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\daoimpl\Social\EventoDAOImpl.java
+C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\daoimpl\Social\NotificacionDAOImpl.java
 C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\daoimpl\Social\PostDAOImpl.java
+C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\daoimpl\Social\StoryDAOImpl.java
 C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\daoimpl\Usuarios\AdministradorDAOImpl.java
 C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\daoimpl\Usuarios\AlumnoDAOImpl.java
 C:\Users\USUARIO\Documents\2025-01\Programacion3\backend\PucpConnectPersistence\src\main\java\pucp\edu\pe\pucpconnect\persistence\daoimpl\Usuarios\InteresDAOImpl.java

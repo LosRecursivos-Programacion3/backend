@@ -16,7 +16,7 @@ import pucp.edu.pe.pucpconnect.persistence.dao.Usuarios.UsuarioDAO;
 public class UsuarioDAOImpl extends BaseDAOImpl<Usuario> implements UsuarioDAO {
     @Override
     protected PreparedStatement getInsertPS(Connection conn, Usuario usuario) throws SQLException {
-        String query = "{CALL sp_registrar_usuario(?, ?, ?, ?, ?, ?)}"; // Procedimiento almacenado para insertar usuario
+        String query = "{CALL sp_registrar_usuario(?, ?, ?, ?, ?, ?,?)}"; // Procedimiento almacenado para insertar usuario
         CallableStatement cs = conn.prepareCall(query);
         cs.setString(1, usuario.getNombre());
         cs.setString(2, usuario.getPassword());
@@ -24,7 +24,7 @@ public class UsuarioDAOImpl extends BaseDAOImpl<Usuario> implements UsuarioDAO {
         cs.setTimestamp(4, Timestamp.valueOf(usuario.getFechaRegistro()));
         cs.setString(5, usuario.getEmail());
         cs.setBoolean(6, usuario.isVisible());
-        cs.registerOutParameter(6, Types.INTEGER);
+        cs.registerOutParameter(7, Types.INTEGER);
         return cs;
     }
 
@@ -51,7 +51,7 @@ public class UsuarioDAOImpl extends BaseDAOImpl<Usuario> implements UsuarioDAO {
 
     @Override
     protected PreparedStatement getSelectByIdPS(Connection conn, Integer id) throws SQLException {
-        String query = "SELECT * FROM usuarios WHERE id = ?";
+        String query = "SELECT * FROM Usuario WHERE idUsuario = ?";
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setInt(1, id);
         return ps;
@@ -59,14 +59,14 @@ public class UsuarioDAOImpl extends BaseDAOImpl<Usuario> implements UsuarioDAO {
 
     @Override
     protected PreparedStatement getSelectAllPS(Connection conn) throws SQLException {
-        String query = "SELECT * FROM usuarios";
+        String query = "SELECT * FROM Usuario";
         return conn.prepareStatement(query);
     }
 
     @Override
     protected Usuario createFromResultSet(ResultSet rs) throws SQLException {
         Usuario usuario = new Usuario();
-        usuario.setId(rs.getInt("id"));
+        usuario.setId(rs.getInt("idUsuario"));
         usuario.setNombre(rs.getString("nombre"));
         usuario.setPassword(rs.getString("password"));
         usuario.setEstado(rs.getBoolean("estado"));
