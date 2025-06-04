@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS Administrador (
 -- 3) Tabla Alumno (1:1 con Usuario)
 DROP TABLE IF EXISTS Alumno;
 CREATE TABLE IF NOT EXISTS Alumno (
-  idUsuario INT PRIMARY KEY,
+  idAlumno INT AUTO_INCREMENT PRIMARY KEY,
+  idUsuario INT NOT NULL,
   edad INT,
   carrera VARCHAR(100),
   fotoPerfil VARCHAR(255),
@@ -134,7 +135,7 @@ CREATE TABLE IF NOT EXISTS Reaccion (
   post_id INT,
   comentario_id INT,
   evento_id INT,
-  activo BOOLEAN NOT NULL DEFAULT TRUE,
+  estado BOOLEAN NOT NULL DEFAULT TRUE,
   fecha DATETIME NOT NULL,
   FOREIGN KEY (usuario_id)    REFERENCES Alumno(idUsuario),
   FOREIGN KEY (post_id)       REFERENCES Post(idPost),
@@ -178,4 +179,12 @@ CREATE TABLE IF NOT EXISTS Notificacion (
   visto BOOLEAN NOT NULL DEFAULT FALSE,
   FOREIGN KEY (usuario_id) REFERENCES Usuario(idUsuario)
 );
-
+-- Bloqueados
+CREATE TABLE Alumnos_bloqueados (
+    id_Alumno INT NOT NULL,
+    id_Alumno_bloqueado INT NOT NULL,
+    fecha DATETIME NOT NULL,
+    PRIMARY KEY (id_Alumno, id_Alumno_bloqueado),
+    FOREIGN KEY (id_Alumno) REFERENCES Alumno(idAlumno),
+    FOREIGN KEY (id_Alumno_bloqueado) REFERENCES Alumno(idAlumno)
+);

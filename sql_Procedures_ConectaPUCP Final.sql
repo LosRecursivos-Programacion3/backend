@@ -14,7 +14,7 @@ BEGIN
   DECLARE newUserId INT;
 
   -- Insertar en la tabla Usuario con activo fijo en TRUE
-  INSERT INTO Usuario (nombre, password, estado, fechaRegistro, email)
+  INSERT INTO Usuario (nombre, password, estado, fecha_Registro, email)
   VALUES (p_nombre, p_password, TRUE, p_fechaRegistro, p_email);
 
   -- Obtener el ID generado automáticamente
@@ -43,7 +43,7 @@ BEGIN
     password = p_password,
     estado = p_estado,
     email = p_email
-  WHERE idUsuario = p_idUsuario AND activo = TRUE;
+  WHERE idUsuario = p_idUsuario AND estado = TRUE;
 END;
 //
 DELIMITER ;
@@ -77,7 +77,7 @@ CREATE PROCEDURE sp_registrar_usuario (
   OUT p_idUsuario INT  -- Parámetro de salida para el idUsuario generado
 )
 BEGIN
-  INSERT INTO Usuario(nombre, password, estado, fecha_registro, email, visible)
+  INSERT INTO Usuario(nombre, password, estado, fecha_Registro, email, visible)
   VALUES (p_nombre, p_password, p_estado, p_fechaRegistro, p_email, p_visible);
   SET p_idUsuario = LAST_INSERT_ID();
 END;
@@ -122,23 +122,24 @@ DELIMITER ;
 --  PROCEDURES PARA ALUMNO
 -- ====================
 
-
-CREATE PROCEDURE RegistrarAlumno (
+DELIMITER //
+CREATE PROCEDURE sp_registrar_alumno (
   IN p_nombre VARCHAR(100),
   IN p_password VARCHAR(255),
-  IN p_email VARCHAR(100),
   IN p_fechaRegistro DATETIME,
+  IN p_email VARCHAR(100),
   IN p_edad INT,
   IN p_carrera VARCHAR(100),
   IN p_fotoPerfil VARCHAR(255),
   IN p_ubicacion VARCHAR(255),
-  IN p_biografia TEXT
+  IN p_biografia TEXT,
+  OUT p_idAlumno INT
 )
 BEGIN
   DECLARE v_idUsuario INT;
 
   -- Insertar en la tabla Usuario
-  INSERT INTO Usuario (nombre, password, estado, fechaRegistro, email)
+  INSERT INTO Usuario (nombre, password, estado, fecha_Registro, email)
   VALUES (p_nombre, p_password, TRUE, p_fechaRegistro, p_email);
 
   -- Obtener el ID generado para Usuario
@@ -147,18 +148,20 @@ BEGIN
   -- Insertar en la tabla Alumno
   INSERT INTO Alumno (idUsuario, edad, carrera, fotoPerfil, ubicacion, biografia)
   VALUES (v_idUsuario, p_edad, p_carrera, p_fotoPerfil, p_ubicacion, p_biografia);
+  SET p_idAlumno = LAST_INSERT_ID();
 END;
 //
 DELIMITER ;
 
 
---Desactivar Alumno (cambia activo a FALSE tanto en Alumno como en Usuario)
+-- Desactivar Alumno (cambia activo a FALSE tanto en Alumno como en Usuario)
 DROP PROCEDURE IF EXISTS sp_eliminar_alumno;
 DELIMITER //
-CREATE PROCEDURE sp_eliminar_alumno (IN p_idUsuario INT)
+CREATE PROCEDURE sp_eliminar_alumno (IN p_idAlumno INT)
 BEGIN
-  UPDATE Alumno SET activo = FALSE WHERE idUsuario = p_idUsuario;
-  UPDATE Usuario SET activo = FALSE WHERE idUsuario = p_idUsuario;
+  DECLARE v_idUsuario INT;
+  SELECT idUsuario INTO v_idUsuario FROM Alumno WHERE idAlumno = p_idAlumno;
+  UPDATE Usuario SET estado = FALSE WHERE idUsuario = v_idUsuario;
 END;
 //
 DELIMITER ;
@@ -167,7 +170,7 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS sp_actualizar_alumno;
 DELIMITER //
 CREATE PROCEDURE sp_actualizar_alumno (
-  IN p_idUsuario INT,
+  IN p_idAlumno INT,
   IN p_nombre VARCHAR(100),
   IN p_password VARCHAR(100),
   IN p_estado BOOLEAN,
@@ -175,10 +178,12 @@ CREATE PROCEDURE sp_actualizar_alumno (
   IN p_edad INT,
   IN p_carrera VARCHAR(100),
   IN p_fotoPerfil VARCHAR(255),
-  IN p_fotoPerfil VARCHAR(255)
+  IN p_biografia TEXT
 )
 BEGIN
   -- Actualizar tabla Usuario (nombre)
+  DECLARE p_idUsuario INT;
+  SELECT idUsuario INTO p_idUsuario FROM Alumno WHERE idAlumno = p_idAlumno;
     UPDATE Usuario
      SET 
           nombre = p_nombre,
@@ -195,20 +200,23 @@ BEGIN
     biografia = p_biografia,
     fotoPerfil = p_fotoPerfil
   WHERE idUsuario = p_idUsuario;
-END//
+END
+//
 DELIMITER ;
 
---Actualizar biografía del alumno
+
+-- Actualizar biografía del alumno;
+
 DROP PROCEDURE IF EXISTS ActualizarBiografiaAlumno;
 DELIMITER //
 CREATE PROCEDURE ActualizarBiografiaAlumno (
-  IN p_idUsuario INT,
+  IN p_idAlumno INT,
   IN p_nuevaBiografia TEXT
 )
 BEGIN
   UPDATE Alumno
   SET biografia = p_nuevaBiografia
-  WHERE idUsuario = p_idUsuario;
+  WHERE idAlumno = p_idAlumno;
 END;
 //
 DELIMITER ;
@@ -216,13 +224,15 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS ActualizarPasswordUsuario;
 DELIMITER //
 CREATE PROCEDURE ActualizarPasswordUsuario (
-  IN p_idUsuario INT,
+  IN p_idAlumno INT,
   IN p_nuevaPassword VARCHAR(255)
 )
 BEGIN
+  DECLARE p_idUsuario INT;
+  SELECT idUsuario INTO p_idUsuario FROM Alumno WHERE idAlumno = p_idAlumno;
   UPDATE Usuario
   SET password = p_nuevaPassword
-  WHERE idUsuario = p_idUsuario AND activo = TRUE;
+  WHERE idUsuario = p_idUsuario AND estado = TRUE;
 END;
 //
 DELIMITER ;
@@ -235,11 +245,13 @@ DELIMITER //
 
 CREATE PROCEDURE sp_registrar_interes (
   IN p_nombre VARCHAR(100),
-  IN p_descripcion VARCHAR(255)
+  IN p_descripcion VARCHAR(255),
+  OUT p_idInteres INT
 )
 BEGIN
   INSERT INTO Interes (nombre, estado, descripcion)
   VALUES (p_nombre, TRUE, p_descripcion);
+  SET p_idIntereses = LAST_INSERT_ID();
 END;
 //
 DELIMITER ;
@@ -329,11 +341,13 @@ CREATE PROCEDURE sp_registrar_evento (
   IN p_fecha DATETIME,
   IN p_ubicacion VARCHAR(255),
   IN p_estado BOOLEAN,
-  IN p_creador_id INT
+  IN p_creador_id INT,
+  OUT p_idEvento INT
 )
 BEGIN
   INSERT INTO Evento (nombre, descripcion, fecha, ubicacion, estado, creador_id)
   VALUES (p_nombre, p_descripcion, p_fecha, p_ubicacion, TRUE, p_creador_id);
+  SET p_idEvento = LAST_INSERT_ID();
 END;
 //
 DELIMITER ;
@@ -494,7 +508,7 @@ CREATE PROCEDURE EliminarComentario (
   IN p_idComentario INT
 )
 BEGIN
-  UPDATE Comentario SET activo = FALSE WHERE idComentario = p_idComentario;
+  UPDATE Comentario SET estado = FALSE WHERE idComentario = p_idComentario;
 END;
 //
 DELIMITER ;
@@ -503,7 +517,7 @@ DROP PROCEDURE IF EXISTS DesactivarPost;
 DELIMITER //
 CREATE PROCEDURE DesactivarPost (IN p_idPost INT)
 BEGIN
-  UPDATE Post SET activo = FALSE WHERE idPost = p_idPost;
+  UPDATE Post SET estado = FALSE WHERE idPost = p_idPost;
 END//
 DELIMITER ;
 

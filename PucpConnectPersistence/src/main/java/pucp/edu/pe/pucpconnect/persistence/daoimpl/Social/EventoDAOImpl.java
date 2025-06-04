@@ -52,7 +52,7 @@ public class EventoDAOImpl extends BaseDAOImpl<Evento> implements EventoDAO {
 
     @Override
     protected PreparedStatement getSelectByIdPS(Connection conn, Integer id) throws SQLException {
-        String query = "SELECT * FROM eventos WHERE id_evento = ?";
+        String query = "SELECT * FROM Evento WHERE id_evento = ?";
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setInt(1, id);
         return ps;
@@ -60,7 +60,7 @@ public class EventoDAOImpl extends BaseDAOImpl<Evento> implements EventoDAO {
 
     @Override
     protected PreparedStatement getSelectAllPS(Connection conn) throws SQLException {
-        String query = "SELECT * FROM eventos";
+        String query = "SELECT * FROM Evento";
         return conn.prepareStatement(query);
     }
 

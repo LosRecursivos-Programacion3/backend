@@ -18,7 +18,7 @@ public class PostDAOImpl extends BaseDAOImpl<Post> implements PostDAO {
     protected PreparedStatement getInsertPS(Connection conn, Post post) throws SQLException {
         String query = "{CALL sp_registrar_post(?, ?, ?, ?, ?)}"; // Procedimiento almacenado para insertar post
         CallableStatement cs = conn.prepareCall(query);
-        cs.setInt(4, post.getAutor());
+        cs.setInt(4, post.getAutor().getId());
         cs.setString(1, post.getContenido());
         cs.setTimestamp(2, Timestamp.valueOf(post.getFecha())); // Fecha del post
         cs.setBoolean(3, post.isEstado());
