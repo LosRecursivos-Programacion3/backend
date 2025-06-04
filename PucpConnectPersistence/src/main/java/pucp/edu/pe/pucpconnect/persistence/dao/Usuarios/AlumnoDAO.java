@@ -7,10 +7,14 @@ package pucp.edu.pe.pucpconnect.persistence.dao.Usuarios;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
 
+import java.util.List;
+
 /**
  *
  * @author USUARIO
  */
 public interface AlumnoDAO extends BaseDAO<Alumno> {
-    
+    boolean bloquearAlumno(int idAlumno, int idBloqueado);
+    boolean desbloquearAlumno(int idAlumno, int idBloqueado);
+    List<Integer> obtenerAlumnosBloqueados(int idAlumno);
 }
