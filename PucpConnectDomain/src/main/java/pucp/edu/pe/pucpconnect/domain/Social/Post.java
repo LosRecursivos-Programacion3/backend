@@ -1,4 +1,4 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -95,8 +95,8 @@ public class Post {
         this.estado = estado;
     }
 
-    public int getAutor() {
-        return 1;
+    public Alumno getAutor() {
+        return autor;
     }
 
     public void setAutor(Alumno autor) {

@@ -16,6 +16,7 @@ public class Alumno extends Usuario {
     private String ubicacion;
     private String biografia;
     private List<Interes> intereses = new ArrayList<>();
+    private List<Evento> eventos = new ArrayList<>();
 
     public Alumno() { super(); }
 
@@ -46,6 +47,11 @@ public class Alumno extends Usuario {
             throw new IllegalArgumentException("Interés nulo");
         intereses.add(interes);
     }
+
+    public void agregarEvento(Evento evento){
+        if(evento == null)
+            throw new IllegalArgumentException("Evento nulo");
+        eventos.add(evento);
 
     public Mensaje enviarMensaje(Alumno receptor, String contenido) {
         if (receptor == null)

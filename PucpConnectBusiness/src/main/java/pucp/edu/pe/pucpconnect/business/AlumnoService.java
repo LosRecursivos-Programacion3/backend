@@ -13,6 +13,8 @@ public interface AlumnoService {
 
     void agregarInteres(int idAlumno, Interes interes) throws Exception;
 
+    void unirseAEvento(Evento evento, Alumno alumno) throws Exception;
+
     Alumno buscarPorId(int id) throws Exception;
 
     List<Alumno> listarAlumnos();
