@@ -3,6 +3,7 @@ package pucp.edu.pe.pucpconnect.business.impl;
 import pucp.edu.pe.pucpconnect.business.AlumnoService;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
+import pucp.edu.pe.pucpconnect.domain.Social.Evento;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
 
 import java.util.List;

@@ -2,6 +2,7 @@ package pucp.edu.pe.pucpconnect.business;
 
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
+import pucp.edu.pe.pucpconnect.domain.Social.Evento;
 
 import java.util.List;
 
