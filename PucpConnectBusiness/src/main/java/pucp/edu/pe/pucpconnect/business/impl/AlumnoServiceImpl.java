@@ -59,6 +59,18 @@ public class AlumnoServiceImpl implements AlumnoService {
     }
 
     @Override
+    public void unirseAEvento(Evento evento, Alumno alumno) throws Exception {
+        if (evento == null || alumno == null)
+            throw new Exception("Evento y alumno no pueden ser nulos.");
+
+        if (evento.getParticipantes().contains(alumno))
+            throw new Exception("El alumno ya está inscrito en este evento.");
+
+        evento.agregarParticipante(alumno);
+        eventoDAO.actualizar(evento);
+    }
+
+    @Override
     public Alumno buscarPorId(int id) throws Exception {
         Alumno alumno = alumnoDAO.obtener(id);
         if (alumno == null)
