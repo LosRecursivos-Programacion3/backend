@@ -17,6 +17,7 @@ public class Alumno extends Usuario {
     private String biografia;
     private List<Interes> intereses = new ArrayList<>();
     private List<Evento> eventos = new ArrayList<>();
+    private List<Integer> idsAlumnosBloqueados = new ArrayList<>();
 
     public Alumno() { super(); }
 
@@ -131,4 +132,22 @@ public class Alumno extends Usuario {
     public void setBiografia(String biografia) {
         this.biografia = biografia;
     }
+
+    public List<Integer> getIdsAlumnosBloqueados() {
+        return idsAlumnosBloqueados;
+    }
+
+    public void setIdsAlumnosBloqueados(List<Integer> idsAlumnosBloqueados) {
+        this.idsAlumnosBloqueados = idsAlumnosBloqueados;
+    }
+
+    // Método adicional para bloquear un alumno (opcional pero útil)
+    public boolean bloquearAlumno(int idBloqueado) {
+        if (!idsAlumnosBloqueados.contains(idBloqueado)) {
+            idsAlumnosBloqueados.add(idBloqueado);
+            return true;
+        }
+        return false; // Ya estaba bloqueado
+    }
+
 }

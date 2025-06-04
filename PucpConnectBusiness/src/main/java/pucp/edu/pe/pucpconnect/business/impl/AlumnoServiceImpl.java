@@ -4,6 +4,7 @@ import pucp.edu.pe.pucpconnect.business.AlumnoService;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
+import pucp.edu.pe.pucpconnect.persistence.dao.Usuarios.AlumnoDAO;
 
 import java.util.List;
 import pucp.edu.pe.pucpconnect.domain.Social.Evento;
@@ -90,4 +91,28 @@ public class AlumnoServiceImpl implements AlumnoService {
     public void eliminarAlumno(int id) {
         alumnoDAO.eliminar(id);
     }
+
+    @Override
+    public boolean bloquearAlumno(int idAlumno, int idBloqueado) throws Exception {
+        if (idAlumno == idBloqueado) {
+            throw new Exception("No puedes bloquearte a ti mismo.");
+        }
+
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        return dao.bloquearAlumno(idAlumno, idBloqueado);
+    }
+
+    
+    @Override
+    public boolean desbloquearAlumno(int idAlumno, int idBloqueado) throws Exception {
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        return dao.desbloquearAlumno(idAlumno, idBloqueado);
+    }
+
+    @Override
+    public List<Integer> obtenerAlumnosBloqueados(int idAlumno) throws Exception {
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        return dao.obtenerAlumnosBloqueados(idAlumno);
+    }
+
 }
