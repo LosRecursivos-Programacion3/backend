@@ -66,8 +66,8 @@ public class AlumnoServiceImpl implements AlumnoService {
         if (evento.getParticipantes().contains(alumno))
             throw new Exception("El alumno ya está inscrito en este evento.");
 
-        evento.agregarParticipante(alumno);
-        eventoDAO.actualizar(evento);
+        alumno.agregarEvento(evento);
+        alumnoDAO.actualizar(alumno);
     }
 
     @Override
