@@ -2,6 +2,8 @@
 package pucp.edu.pe.pucpconnect.domain.Usuarios;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Usuario {
@@ -12,8 +14,12 @@ public class Usuario {
     private LocalDateTime fechaRegistro;
     private String email;
     private boolean visible;
+    // NUEVO: Lista de IDs de usuarios bloqueados (RF12)
+    private List<Integer> idsUsuariosBloqueados;
 
-    public Usuario() {}
+    public Usuario() {
+        this.idsUsuariosBloqueados = new ArrayList<>();
+    }
 
     public Usuario(int id, String nombre, String password, boolean estado,
                    LocalDateTime fechaRegistro, String email) {
@@ -47,6 +53,20 @@ public class Usuario {
         return validarEmail(this.email);
     }
 
+    public void bloquearUsuario(int idUsuario) {
+        if (!idsUsuariosBloqueados.contains(idUsuario)) {
+            idsUsuariosBloqueados.add(idUsuario);
+        }
+    }
+
+    public void desbloquearUsuario(int idUsuario) {
+        idsUsuariosBloqueados.remove(Integer.valueOf(idUsuario));
+    }
+
+    public boolean estaBloqueado(int idUsuario) {
+        return idsUsuariosBloqueados.contains(idUsuario);
+    }
+
     // Getters y Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -62,4 +82,11 @@ public class Usuario {
     public void setEmail(String email) { this.email = email; }
     public boolean isVisible() {return visible;}
     public void setVisible(boolean visible) {this.visible = visible;}
+    public List<Integer> getIdsUsuariosBloqueados() {
+        return idsUsuariosBloqueados;
+    }
+
+    public void setIdsUsuariosBloqueados(List<Integer> idsUsuariosBloqueados) {
+        this.idsUsuariosBloqueados = idsUsuariosBloqueados;
+    }
 }
