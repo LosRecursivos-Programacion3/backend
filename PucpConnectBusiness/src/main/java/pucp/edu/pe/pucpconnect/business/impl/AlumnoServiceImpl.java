@@ -6,10 +6,11 @@ import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
 
 import java.util.List;
+import pucp.edu.pe.pucpconnect.domain.Social.Evento;
 
 public class AlumnoServiceImpl implements AlumnoService {
 
-    private BaseDAO<Alumno> alumnoDAO;
+    private final BaseDAO<Alumno> alumnoDAO;
 
     public AlumnoServiceImpl(BaseDAO<Alumno> alumnoDAO) {
         this.alumnoDAO = alumnoDAO;
@@ -31,7 +32,9 @@ public class AlumnoServiceImpl implements AlumnoService {
 
         alumnoDAO.agregar(alumno);
     }
-
+    
+    
+    
     @Override
     public void actualizarBiografia(int idAlumno, String nuevaBio) throws Exception {
         Alumno alumno = alumnoDAO.obtener(idAlumno);

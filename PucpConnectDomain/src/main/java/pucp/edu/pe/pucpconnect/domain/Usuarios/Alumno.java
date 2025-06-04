@@ -52,7 +52,8 @@ public class Alumno extends Usuario {
         if(evento == null)
             throw new IllegalArgumentException("Evento nulo");
         eventos.add(evento);
-
+    }
+        
     public Mensaje enviarMensaje(Alumno receptor, String contenido) {
         if (receptor == null)
             throw new IllegalArgumentException("Receptor nulo");

@@ -24,6 +24,7 @@
             <groupId>pucp.edu.pe</groupId>
             <artifactId>PucpConnectPersistence</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 </project>

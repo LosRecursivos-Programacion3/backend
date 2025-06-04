@@ -4,6 +4,7 @@ import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
 
 import java.util.List;
+import pucp.edu.pe.pucpconnect.domain.Social.Evento;
 
 public interface AlumnoService {
 

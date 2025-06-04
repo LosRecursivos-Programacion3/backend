@@ -7,6 +7,7 @@ package pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios;
 import java.sql.*;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAOImpl;
+import pucp.edu.pe.pucpconnect.persistence.DBManager;
 import pucp.edu.pe.pucpconnect.persistence.dao.Usuarios.AlumnoDAO;
 
 /**

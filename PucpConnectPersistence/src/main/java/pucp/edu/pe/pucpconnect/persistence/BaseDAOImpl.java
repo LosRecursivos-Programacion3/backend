@@ -31,6 +31,8 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
             throw new RuntimeException("Error al agregar entidad", e);
         }
     }
+    
+    
 
     @Override
     public T obtener(Integer id) {
