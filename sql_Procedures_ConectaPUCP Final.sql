@@ -529,7 +529,7 @@ CREATE PROCEDURE ListarPostsDeUsuario (
 BEGIN
   SELECT p.idPost, p.contenido, p.fecha
   FROM Post p
-  WHERE p.autor_id = p_idUsuario AND p.activo = TRUE;
+  WHERE p.autor_id = p_idUsuario AND p.estado = TRUE;
 END;
 //
 DELIMITER ;
@@ -650,7 +650,7 @@ CREATE PROCEDURE sp_registrar_reaccion (
   IN p_evento_id INT
 )
 BEGIN
-  INSERT INTO Reaccion (tipoReaccion, usuario_id, post_id, comentario_id, evento_id, activo, fecha)
+  INSERT INTO Reaccion (tipoReaccion, usuario_id, post_id, comentario_id, evento_id, estado, fecha)
   VALUES (
     CASE 
       WHEN p_tipoReaccion = 0 THEN 'LIKE'
@@ -704,7 +704,7 @@ CREATE PROCEDURE sp_eliminar_reaccion(
 BEGIN
   -- Actualizar el campo "activo" a FALSE para desactivar la reacción
   UPDATE Reaccion
-  SET activo = FALSE
+  SET estado = FALSE
   WHERE idReaccion = p_idReaccion;
 END;
 //
@@ -770,7 +770,7 @@ BEGIN
   SELECT s.idStory, s.usuario_id AS autor_id, s.urlContenido, s.tipo, s.fechaCreacion
   FROM Story s
   JOIN Story_Visualizacion sv ON s.idStory = sv.idStory
-  WHERE sv.idUsuario = p_idUsuario AND sv.permitido = TRUE AND s.activo = TRUE;
+  WHERE sv.idUsuario = p_idUsuario AND sv.permitido = TRUE AND s.estado = TRUE;
 END;
 //
 DELIMITER ;
@@ -779,7 +779,7 @@ DROP PROCEDURE IF EXISTS DesactivarStory;
 DELIMITER //
 CREATE PROCEDURE DesactivarStory (IN p_idStory INT)
 BEGIN
-  UPDATE Story SET activo = FALSE WHERE idStory = p_idStory;
+  UPDATE Story SET estado = FALSE WHERE idStory = p_idStory;
 END//
 DELIMITER ;
 -- ====================
