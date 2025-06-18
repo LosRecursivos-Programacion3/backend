@@ -102,4 +102,16 @@ public class UsuarioServiceImpl implements UsuarioService {
     
         return matches;
     }
+
+    public void hacerMatch(int idAlumnoUno, int idAlumnoDos) throws SQLException {
+    String query = "{CALL sp_hacer_match(?, ?)}";
+    try (Connection conn = Conexion.getConnection();
+         CallableStatement cs = conn.prepareCall(query)) {
+
+        cs.setInt(1, idAlumnoUno);
+        cs.setInt(2, idAlumnoDos);
+
+        cs.execute();
+    }
+}
 }
