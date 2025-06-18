@@ -58,7 +58,31 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public List<Usuario> listarMatches(int idUsuario) {
-        // Dependerá de si tienes lógica/módulo de emparejamientos
-        return new ArrayList<>(); // Por ahora retorna vacío
+        List<Usuario> matches = new ArrayList<>();
+    
+        String query = "{CALL ListarMatches(?)}";
+    
+        try (Connection conn = Conexion.obtenerConexion();
+             CallableStatement cs = conn.prepareCall(query)) {
+    
+            cs.setInt(1, idUsuario);
+    
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    Usuario u = new Usuario();
+                    u.setId(rs.getInt("idUsuario"));
+                    u.setNombre(rs.getString("nombre"));
+                    u.setEmail(rs.getString("email"));
+                    u.setEstado(rs.getBoolean("estado"));
+                    u.setFechaRegistro(rs.getTimestamp("fechaRegistro").toLocalDateTime());
+                    matches.add(u);
+                }
+            }
+    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return matches;
     }
 }
