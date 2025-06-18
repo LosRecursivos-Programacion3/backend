@@ -118,6 +118,18 @@ END;
 //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS sp_buscar_usuario_por_id;
+DELIMITER //
+CREATE PROCEDURE sp_buscar_usuario_por_id (
+    IN p_idUsuario INT
+)
+BEGIN
+    SELECT u.idUsuario, u.nombre, u.password, u.estado, u.fechaRegistro, u.email, a.edad, a.carrera, a.fotoPerfil, a.ubicacion, a.biografia
+    FROM Usuario u
+    LEFT JOIN Alumno a ON u.idUsuario = a.idUsuario
+    WHERE u.idUsuario = p_idUsuario AND u.estado = TRUE;
+END //
+DELIMITER ;
 -- ====================
 --  PROCEDURES PARA ALUMNO
 -- ====================
