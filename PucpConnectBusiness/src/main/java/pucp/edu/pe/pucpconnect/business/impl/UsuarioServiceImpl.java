@@ -38,13 +38,30 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public List<Usuario> listarSugerencias(int idUsuario) {
-        // Esta lógica puede mejorar con intereses comunes, etc.
         List<Usuario> sugerencias = new ArrayList<>();
         List<Usuario> todos = usuarioDAO.listarTodos();
-
+    
+        // Obtener la carrera del usuario actual
+        Usuario usuarioActual = usuarioDAO.buscarPorId(idUsuario);
+        if (usuarioActual == null || !(usuarioActual instanceof Alumno)) {
+            return sugerencias; // Si no es alumno o no existe, retornamos vacío
+        }
+        String carreraUsuario = ((Alumno) usuarioActual).getCarrera();
+    
         for (Usuario u : todos) {
             if (u.getId() != idUsuario && u.isVisible()) {
-                sugerencias.add(u);
+                if (u instanceof Alumno) {
+                    Alumno alumno = (Alumno) u;
+                    if (carreraUsuario.equalsIgnoreCase(alumno.getCarrera())) {
+                        // Priorizar sugerencias de la misma carrera
+                        sugerencias.add(0, u); // Insertar al inicio
+                    } else {
+                        // Sugerencias de otras carreras van al final
+                        sugerencias.add(u);
+                    }
+                } else {
+                    sugerencias.add(u); // Si no es alumno, igual se sugiere
+                }
             }
         }
         return sugerencias;
