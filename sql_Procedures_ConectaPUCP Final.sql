@@ -636,6 +636,23 @@ END;
 //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS sp_listar_matches;
+DELIMITER //
+
+CREATE PROCEDURE sp_listar_matches (
+    IN p_idUsuario INT
+)
+BEGIN
+    SELECT u.idUsuario, u.nombre, u.email, u.estado, u.fechaRegistro
+    FROM Interaccion i1
+    JOIN Interaccion i2 ON i1.alumnoUno_id = i2.alumnoDos_id AND i1.alumnoDos_id = i2.alumnoUno_id
+    JOIN Usuario u ON u.idUsuario = i1.alumnoDos_id
+    WHERE i1.alumnoUno_id = p_idUsuario 
+      AND i1.tipo = 'LIKE' AND i1.estado = TRUE
+      AND i2.tipo = 'LIKE' AND i2.estado = TRUE;
+END;
+//
+DELIMITER ;
 -- ====================
 --  PROCEDURES PARA REACCIONES
 -- ====================
