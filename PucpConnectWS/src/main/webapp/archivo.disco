@@ -1,0 +1,4 @@
+<discovery xmlns="http://schemas.xmlsoap.org/disco/"> xmlns:xsd="http://www.w3.org/2001/XMLSSchema">
+  <contractRef xmlns="http://schemas.xmlsoap.org/disco/scl/" ref="http://localhost:8080/PucpConnectWS/EventoWS?wsdl" />
+  <contractRef xmlns="http://schemas.xmlsoap.org/disco/scl/" ref="http://localhost:8080/PucpConnectWS/UsuarioWS?wsdl" />
+</discovery>
