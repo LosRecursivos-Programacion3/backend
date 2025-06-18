@@ -80,4 +80,50 @@ public class UsuarioDAOImpl extends BaseDAOImpl<Usuario> implements UsuarioDAO {
     protected void setId(Usuario usuario, Integer id) {
         usuario.setId(id);
     }
+
+    public Usuario buscarPorId(int idUsuario) {
+    Usuario usuario = null;
+    String query = "{CALL sp_buscar_usuario_por_id(?)}";
+
+    try (Connection conn = ConexionBD.getConnection();
+         CallableStatement cs = conn.prepareCall(query)) {
+
+        cs.setInt(1, idUsuario);
+        ResultSet rs = cs.executeQuery();
+
+        if (rs.next()) {
+            boolean esAlumno = rs.getString("carrera") != null;
+
+            if (esAlumno) {
+                // Crear un Alumno si tiene datos de carrera
+                Alumno alumno = new Alumno();
+                alumno.setId(rs.getInt("idUsuario"));
+                alumno.setNombre(rs.getString("nombre"));
+                alumno.setPassword(rs.getString("password"));
+                alumno.setEstado(rs.getBoolean("estado"));
+                alumno.setFechaRegistro(rs.getTimestamp("fechaRegistro").toLocalDateTime());
+                alumno.setEmail(rs.getString("email"));
+                alumno.setEdad(rs.getInt("edad"));
+                alumno.setCarrera(rs.getString("carrera"));
+                alumno.setFotoPerfil(rs.getString("fotoPerfil"));
+                alumno.setUbicacion(rs.getString("ubicacion"));
+                alumno.setBiografia(rs.getString("biografia"));
+                usuario = alumno;
+            } else {
+                // Si no es alumno, retornar solo Usuario
+                usuario = new Usuario();
+                usuario.setId(rs.getInt("idUsuario"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setPassword(rs.getString("password"));
+                usuario.setEstado(rs.getBoolean("estado"));
+                usuario.setFechaRegistro(rs.getTimestamp("fechaRegistro").toLocalDateTime());
+                usuario.setEmail(rs.getString("email"));
+            }
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+        return usuario;
+    }
 }
