@@ -636,10 +636,10 @@ END;
 //
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS sp_listar_matches;
+DROP PROCEDURE IF EXISTS ListarMatches;
 DELIMITER //
 
-CREATE PROCEDURE sp_listar_matches (
+CREATE PROCEDURE ListarMatches (
     IN p_idUsuario INT
 )
 BEGIN
