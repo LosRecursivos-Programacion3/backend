@@ -4,6 +4,8 @@
  */
 package pucp.edu.pe.pucpconnect.persistence.dao.Social;
 
+import java.util.List;
+
 import pucp.edu.pe.pucpconnect.domain.Social.Notificacion;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
 
@@ -12,5 +14,7 @@ import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
  * @author USUARIO
  */
 public interface NotificacionDAO extends BaseDAO<Notificacion> {
-    
+    boolean insertarNotificacion(Notificacion notificacion);
+    List<Notificacion> obtenerNotificacionesPorUsuario(int idUsuario);
+    boolean marcarComoVisto(int idNotificacion);
 }

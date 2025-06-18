@@ -118,6 +118,18 @@ END;
 //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS sp_buscar_usuario_por_id;
+DELIMITER //
+CREATE PROCEDURE sp_buscar_usuario_por_id (
+    IN p_idUsuario INT
+)
+BEGIN
+    SELECT u.idUsuario, u.nombre, u.password, u.estado, u.fechaRegistro, u.email, a.edad, a.carrera, a.fotoPerfil, a.ubicacion, a.biografia
+    FROM Usuario u
+    LEFT JOIN Alumno a ON u.idUsuario = a.idUsuario
+    WHERE u.idUsuario = p_idUsuario AND u.estado = TRUE;
+END //
+DELIMITER ;
 -- ====================
 --  PROCEDURES PARA ALUMNO
 -- ====================
@@ -636,6 +648,27 @@ END;
 //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS ListarMatches;
+DELIMITER //
+
+CREATE PROCEDURE ListarMatches (
+    IN p_idUsuario INT
+)
+BEGIN
+     -- Verificar que no exista ya un match
+    IF NOT EXISTS (
+        SELECT 1 FROM Interaccion
+        WHERE ((alumnoUno_id = p_alumnoUno_id AND alumnoDos_id = p_alumnoDos_id)
+            OR (alumnoUno_id = p_alumnoDos_id AND alumnoDos_id = p_alumnoUno_id))
+          AND estado = TRUE
+    ) THEN
+        -- Insertar nueva interacción (match)
+        INSERT INTO Interaccion (alumnoUno_id, alumnoDos_id, estado, tipo, fecha)
+        VALUES (p_alumnoUno_id, p_alumnoDos_id, TRUE, 'MATCH', NOW());
+    END IF;
+END;
+//
+DELIMITER ;
 -- ====================
 --  PROCEDURES PARA REACCIONES
 -- ====================

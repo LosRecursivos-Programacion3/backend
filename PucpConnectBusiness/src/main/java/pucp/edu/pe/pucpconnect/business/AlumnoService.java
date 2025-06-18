@@ -4,6 +4,7 @@ import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
 
 import java.util.List;
+import pucp.edu.pe.pucpconnect.domain.Social.Evento;
 
 public interface AlumnoService {
 
@@ -20,6 +21,12 @@ public interface AlumnoService {
     List<Alumno> listarAlumnos();
 
     void eliminarAlumno(int id);
+
+    boolean bloquearAlumno(int idAlumno, int idBloqueado) throws Exception ;
+
+    boolean desbloquearAlumno(int idAlumno, int idBloqueado) throws Exception ;
+
+    List<Integer> obtenerAlumnosBloqueados(int idAlumno) throws Exception ;
 
     /*falta editarPerfil */
 }

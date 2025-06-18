@@ -12,5 +12,5 @@ import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
  * @author USUARIO
  */
 public interface UsuarioDAO extends BaseDAO  <Usuario>{
-    
+    public Usuario buscarPorId(int idUsuario);
 }
