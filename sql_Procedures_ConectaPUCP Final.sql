@@ -655,13 +655,17 @@ CREATE PROCEDURE ListarMatches (
     IN p_idUsuario INT
 )
 BEGIN
-    SELECT u.idUsuario, u.nombre, u.email, u.estado, u.fechaRegistro
-    FROM Interaccion i1
-    JOIN Interaccion i2 ON i1.alumnoUno_id = i2.alumnoDos_id AND i1.alumnoDos_id = i2.alumnoUno_id
-    JOIN Usuario u ON u.idUsuario = i1.alumnoDos_id
-    WHERE i1.alumnoUno_id = p_idUsuario 
-      AND i1.tipo = 'LIKE' AND i1.estado = TRUE
-      AND i2.tipo = 'LIKE' AND i2.estado = TRUE;
+     -- Verificar que no exista ya un match
+    IF NOT EXISTS (
+        SELECT 1 FROM Interaccion
+        WHERE ((alumnoUno_id = p_alumnoUno_id AND alumnoDos_id = p_alumnoDos_id)
+            OR (alumnoUno_id = p_alumnoDos_id AND alumnoDos_id = p_alumnoUno_id))
+          AND estado = TRUE
+    ) THEN
+        -- Insertar nueva interacción (match)
+        INSERT INTO Interaccion (alumnoUno_id, alumnoDos_id, estado, tipo, fecha)
+        VALUES (p_alumnoUno_id, p_alumnoDos_id, TRUE, 'MATCH', NOW());
+    END IF;
 END;
 //
 DELIMITER ;
