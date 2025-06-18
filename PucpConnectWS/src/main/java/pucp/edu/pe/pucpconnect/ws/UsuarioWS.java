@@ -19,7 +19,7 @@ import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImpl;
  *
  * @author Fernando
  */
-@WebService(serviceName = "UsuarioWS")
+@WebService(serviceName = "UsuarioWS", targetNamespace = "pucp.edu.pe.pucpconnect")
 public class UsuarioWS {
     private final AlumnoService alumnoService;
     public UsuarioWS(){
