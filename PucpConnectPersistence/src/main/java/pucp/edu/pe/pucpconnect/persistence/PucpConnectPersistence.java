@@ -6,11 +6,13 @@ package pucp.edu.pe.pucpconnect.persistence;
 
 import java.time.LocalDateTime;
 import pucp.edu.pe.pucpconnect.domain.Social.Post;
+import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Usuario;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Interacciones.ComentarioDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Interacciones.ReaccionDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Social.PostDAOImpl;
+import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImpl;
 
 /**
  *
@@ -26,6 +28,27 @@ public class PucpConnectPersistence {
         ComentarioDAOImpl comentarioDAO = new ComentarioDAOImpl();
         ReaccionDAOImpl reaccionDAO = new ReaccionDAOImpl();
         
+        
+        AlumnoDAOImpl alumnoDAO = new AlumnoDAOImpl();
+        // Prueba CRUD para Alumno
+        System.out.println("Prueba CRUD Alumno");
+        
+        Alumno alumno = new Alumno();
+        alumno.setNombre("Carlos Pérez");
+        alumno.setPassword("password");
+        alumno.setEstado(true);
+        alumno.setFechaRegistro(LocalDateTime.now());
+        alumno.setEmail("carlos@examples2ssss11111111.com");
+        alumno.setVisible(true);
+        alumno.setBiografia("POruebaalumno xd");
+        
+        alumnoDAO.agregar(alumno);
+        System.out.println("Alumno insertado.");
+         // Leer un Usuario
+        Alumno alumnoLeido = alumnoDAO.obtener(1);  // ID de ejemplo
+        System.out.println("Alumno leído: " + alumnoLeido.getNombre());
+        
+        
         // Prueba CRUD para Usuario
         System.out.println("Prueba CRUD Usuario");
 
@@ -35,7 +58,7 @@ public class PucpConnectPersistence {
         usuario.setPassword("password");
         usuario.setEstado(true);
         usuario.setFechaRegistro(LocalDateTime.now());
-        usuario.setEmail("carlos@example.com");
+        usuario.setEmail("carlos@examples1ssss2.com");
         usuario.setVisible(true);
         
         usuarioDAO.agregar(usuario);  // Inserción

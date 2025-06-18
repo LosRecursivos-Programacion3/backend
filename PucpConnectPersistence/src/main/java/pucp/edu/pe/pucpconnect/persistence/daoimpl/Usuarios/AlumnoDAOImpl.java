@@ -61,7 +61,7 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
 
     @Override
     protected PreparedStatement getSelectByIdPS(Connection conn, Integer id) throws SQLException {
-        String query = "SELECT * FROM Alumno WHERE id = ?";
+        String query = "SELECT * FROM Usuario u INNER JOIN Alumno a ON u.idUsuario = a.idAlumno WHERE u.idUsuario = ?";
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setInt(1, id);
         return ps;
@@ -84,7 +84,7 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
         alumno.setEmail(rs.getString("email"));
         alumno.setEdad(rs.getInt("edad"));
         alumno.setCarrera(rs.getString("carrera"));
-        alumno.setFotoPerfil(rs.getString("foto_perfil"));
+        alumno.setFotoPerfil(rs.getString("fotoPerfil"));
         alumno.setUbicacion(rs.getString("biografia"));
         return alumno;
     }
