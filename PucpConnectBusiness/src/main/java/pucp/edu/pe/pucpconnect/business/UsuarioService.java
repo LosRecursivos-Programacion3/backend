@@ -15,4 +15,6 @@ public interface UsuarioService {
     void bloquearUsuario(int idBloqueador, int idBloqueado) throws Exception;
 
     List<Usuario> listarMatches(int idUsuario); // Si decides centralizarlo aquí
+
+    public void hacerMatch(int idAlumnoUno, int idAlumnoDos) throws SQLException;
 }
