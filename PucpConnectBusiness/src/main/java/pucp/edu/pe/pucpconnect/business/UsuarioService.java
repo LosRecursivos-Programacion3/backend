@@ -1,12 +1,13 @@
 package pucp.edu.pe.pucpconnect.business;
 
+import java.sql.SQLException;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Usuario;
 
 import java.util.List;
 
 public interface UsuarioService {
 
-    boolean autenticarUsuario(String correo, String password) throws Exception;
+    Usuario autenticarUsuario(String correo, String password) throws Exception;
 
     void cambiarVisibilidad(int idUsuario, boolean visible) throws Exception;
 

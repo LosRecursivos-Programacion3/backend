@@ -1,5 +1,9 @@
 pucp\edu\pe\pucpconnect\business\impl\AlumnoServiceImpl.class
-pucp\edu\pe\pucpconnect\business\EventoService.class
+pucp\edu\pe\pucpconnect\business\impl\UsuarioServiceImpl.class
 pucp\edu\pe\pucpconnect\business\AlumnoService.class
+pucp\edu\pe\pucpconnect\business\impl\NotificacionServiceImpl.class
+pucp\edu\pe\pucpconnect\business\EventoService.class
+pucp\edu\pe\pucpconnect\business\NotificacionService.class
+pucp\edu\pe\pucpconnect\business\UsuarioService.class
 pucp\edu\pe\pucpconnect\business\impl\EventoServiceImpl.class
 pucp\edu\pe\pucpconnect\business\PucpConnectBusiness.class

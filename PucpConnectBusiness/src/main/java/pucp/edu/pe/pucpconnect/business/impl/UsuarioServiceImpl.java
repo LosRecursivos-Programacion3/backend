@@ -1,11 +1,17 @@
 package pucp.edu.pe.pucpconnect.business.impl;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import pucp.edu.pe.pucpconnect.business.UsuarioService;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Usuario;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
 
 import java.util.ArrayList;
 import java.util.List;
+import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
+import pucp.edu.pe.pucpconnect.persistence.DBManager;
 
 public class UsuarioServiceImpl implements UsuarioService {
 
@@ -16,14 +22,14 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public boolean autenticarUsuario(String correo, String password) throws Exception {
+    public Usuario autenticarUsuario(String correo, String password) throws Exception {
         List<Usuario> usuarios = usuarioDAO.listarTodos();
         for (Usuario u : usuarios) {
             if (u.getEmail().equalsIgnoreCase(correo) && u.autenticar(password)) {
-                return true;
+                return u;
             }
         }
-        return false;
+        return null;
     }
 
     @Override
@@ -42,7 +48,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         List<Usuario> todos = usuarioDAO.listarTodos();
     
         // Obtener la carrera del usuario actual
-        Usuario usuarioActual = usuarioDAO.buscarPorId(idUsuario);
+        Usuario usuarioActual = usuarioDAO.obtener(idUsuario);
         if (usuarioActual == null || !(usuarioActual instanceof Alumno)) {
             return sugerencias; // Si no es alumno o no existe, retornamos vacío
         }
@@ -79,7 +85,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     
         String query = "{CALL ListarMatches(?)}";
     
-        try (Connection conn = Conexion.obtenerConexion();
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
              CallableStatement cs = conn.prepareCall(query)) {
     
             cs.setInt(1, idUsuario);
@@ -102,16 +108,17 @@ public class UsuarioServiceImpl implements UsuarioService {
     
         return matches;
     }
-
+    
+    @Override
     public void hacerMatch(int idAlumnoUno, int idAlumnoDos) throws SQLException {
-    String query = "{CALL sp_hacer_match(?, ?)}";
-    try (Connection conn = Conexion.getConnection();
-         CallableStatement cs = conn.prepareCall(query)) {
+        String query = "{CALL sp_hacer_match(?, ?)}";
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             CallableStatement cs = conn.prepareCall(query)) {
 
-        cs.setInt(1, idAlumnoUno);
-        cs.setInt(2, idAlumnoDos);
+            cs.setInt(1, idAlumnoUno);
+            cs.setInt(2, idAlumnoDos);
 
-        cs.execute();
+            cs.execute();
+        }
     }
-}
 }
