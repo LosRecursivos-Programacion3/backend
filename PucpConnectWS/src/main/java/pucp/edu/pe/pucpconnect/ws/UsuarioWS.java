@@ -9,11 +9,16 @@ import jakarta.jws.WebMethod;
 import jakarta.jws.WebParam;
 import jakarta.xml.ws.WebServiceException;
 import java.time.LocalDateTime;
+import java.util.List;
 import pucp.edu.pe.pucpconnect.business.AlumnoService;
+import pucp.edu.pe.pucpconnect.business.UsuarioService;
 import pucp.edu.pe.pucpconnect.business.impl.AlumnoServiceImpl;
+import pucp.edu.pe.pucpconnect.business.impl.UsuarioServiceImpl;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
+import pucp.edu.pe.pucpconnect.domain.Usuarios.Usuario;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImpl;
+import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImpl;
 
 /**
  *
@@ -22,9 +27,13 @@ import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImpl;
 @WebService(serviceName = "UsuarioWS")
 public class UsuarioWS {
     private final AlumnoService alumnoService;
+    private final UsuarioService usuarioService;
     public UsuarioWS(){
         BaseDAO<Alumno> alumnoDAO = new AlumnoDAOImpl();
         alumnoService = new AlumnoServiceImpl(alumnoDAO);
+
+        BaseDAO<Usuario> usuarioDAO = new UsuarioDAOImpl();
+        usuarioService = new UsuarioServiceImpl(usuarioDAO);
     }
     
     @WebMethod(operationName = "registrarAlumno")
@@ -51,5 +60,13 @@ public class UsuarioWS {
             throw new WebServiceException("Error al registrar alumno: " + e.getMessage(), e);
         }
         return false;
+    }
+    @WebMethod(operationName = "autenticarUsuario")
+    public Usuario autenticarUsuario(@WebParam(name = "email") String email, @WebParam(name = "password") String password) {
+        try {
+            return usuarioService.autenticarUsuario(email, password);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al autenticar usuario: " + e.getMessage(), e);
+        }
     }
 }

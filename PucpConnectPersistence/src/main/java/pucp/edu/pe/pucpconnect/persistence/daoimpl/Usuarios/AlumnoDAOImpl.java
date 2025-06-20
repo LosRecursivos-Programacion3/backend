@@ -5,6 +5,9 @@
 package pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.DBManager;
@@ -58,7 +61,7 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
 
     @Override
     protected PreparedStatement getSelectByIdPS(Connection conn, Integer id) throws SQLException {
-        String query = "SELECT * FROM Alumno WHERE id = ?";
+        String query = "SELECT * FROM Usuario u INNER JOIN Alumno a ON u.idUsuario = a.idAlumno WHERE u.idUsuario = ?";
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setInt(1, id);
         return ps;
@@ -81,7 +84,7 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
         alumno.setEmail(rs.getString("email"));
         alumno.setEdad(rs.getInt("edad"));
         alumno.setCarrera(rs.getString("carrera"));
-        alumno.setFotoPerfil(rs.getString("foto_perfil"));
+        alumno.setFotoPerfil(rs.getString("fotoPerfil"));
         alumno.setUbicacion(rs.getString("biografia"));
         return alumno;
     }
@@ -90,4 +93,63 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
     protected void setId(Alumno alumno, Integer id) {
         alumno.setId(id);
     }
+
+    @Override
+    public boolean bloquearAlumno(int idAlumno, int idBloqueado) {
+        String sql = "INSERT INTO Alumnos_bloqueados (id_Alumno, id_Alumno_bloqueado, fecha) VALUES (?, ?, NOW())";
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idAlumno);
+            pstmt.setInt(2, idBloqueado);
+            int rows = pstmt.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    @Override
+    public boolean desbloquearAlumno(int idAlumno, int idBloqueado) {
+        String sql = "DELETE FROM Alumnos_bloqueados WHERE id_Alumno = ? AND id_Alumno_bloqueado = ?";
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idAlumno);
+            pstmt.setInt(2, idBloqueado);
+            int rows = pstmt.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    
+    @Override
+    public List<Integer> obtenerAlumnosBloqueados(int idAlumno) {
+        List<Integer> idsBloqueados = new ArrayList<>();
+        String sql = "SELECT id_Alumno_bloqueado FROM Alumnos_bloqueados WHERE id_Alumno = ?";
+
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idAlumno);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                idsBloqueados.add(rs.getInt("id_Alumno_bloqueado"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return idsBloqueados;
+    }
+
 }
