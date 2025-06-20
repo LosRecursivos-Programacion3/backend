@@ -7,6 +7,7 @@ package pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Usuario;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAOImpl;
 import java.sql.*;
+import pucp.edu.pe.pucpconnect.persistence.DBManager;
 import pucp.edu.pe.pucpconnect.persistence.dao.Usuarios.UsuarioDAO;
 
 /**
@@ -83,7 +84,17 @@ public class UsuarioDAOImpl extends BaseDAOImpl<Usuario> implements UsuarioDAO {
 
     @Override
     public Usuario buscarPorId(int idUsuario) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Usuario usuario = null;
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement ps = getSelectByIdPS(conn, idUsuario);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                usuario = createFromResultSet(rs);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace(); // Puedes loguear con Logger si deseas
+        }
+        return usuario;
     }
-    
 }

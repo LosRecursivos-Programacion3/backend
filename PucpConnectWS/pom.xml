@@ -30,9 +30,9 @@
             <version>4.0.2</version>
         </dependency>
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <version>9.2.0</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version> <!-- Usa una versión reciente -->
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
