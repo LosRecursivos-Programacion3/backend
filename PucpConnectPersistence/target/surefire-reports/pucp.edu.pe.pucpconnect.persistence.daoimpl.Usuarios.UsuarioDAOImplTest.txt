@@ -1,12 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImplTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.592 s <<< FAILURE! -- in pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImplTest
-pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImplTest.testBuscarPorId -- Time elapsed: 1.543 s <<< ERROR!
-java.lang.UnsupportedOperationException: Not supported yet.
-	at pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImpl.buscarPorId(UsuarioDAOImpl.java:86)
-	at pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImplTest.testBuscarPorId(UsuarioDAOImplTest.java:62)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.506 s -- in pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImplTest
