@@ -69,4 +69,55 @@ public class UsuarioWS {
             throw new WebServiceException("Error al autenticar usuario: " + e.getMessage(), e);
         }
     }
+    @WebMethod(operationName = "cambiarVisibilidad")
+    public boolean cambiarVisibilidad(@WebParam(name = "idUsuario") int idUsuario,
+                                      @WebParam(name = "visible") boolean visible) {
+        try {
+            usuarioService.cambiarVisibilidad(idUsuario, visible);
+            return true;
+        } catch (Exception e) {
+            throw new WebServiceException("Error al cambiar visibilidad: " + e.getMessage(), e);
+        }
+    }
+
+    @WebMethod(operationName = "listarSugerencias")
+    public List<Usuario> listarSugerencias(@WebParam(name = "idUsuario") int idUsuario) {
+        try {
+            return usuarioService.listarSugerencias(idUsuario);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al listar sugerencias: " + e.getMessage(), e);
+        }
+    }
+
+    @WebMethod(operationName = "bloquearUsuario")
+    public boolean bloquearUsuario(@WebParam(name = "idBloqueador") int idBloqueador,
+                                   @WebParam(name = "idBloqueado") int idBloqueado) {
+        try {
+            usuarioService.bloquearUsuario(idBloqueador, idBloqueado);
+            return true;
+        } catch (Exception e) {
+            throw new WebServiceException("Error al bloquear usuario: " + e.getMessage(), e);
+        }
+    }
+
+    @WebMethod(operationName = "listarMatches")
+    public List<Usuario> listarMatches(@WebParam(name = "idUsuario") int idUsuario) {
+        try {
+            return usuarioService.listarMatches(idUsuario);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al listar matches: " + e.getMessage(), e);
+        }
+    }
+
+    @WebMethod(operationName = "hacerMatch")
+    public boolean hacerMatch(@WebParam(name = "idAlumnoUno") int idAlumnoUno,
+                              @WebParam(name = "idAlumnoDos") int idAlumnoDos) {
+        try {
+            usuarioService.hacerMatch(idAlumnoUno, idAlumnoDos);
+            return true;
+        } catch (Exception e) {
+            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+        }
+    }
+}
 }
