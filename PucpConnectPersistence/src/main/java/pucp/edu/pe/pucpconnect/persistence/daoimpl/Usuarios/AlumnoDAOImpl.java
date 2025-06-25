@@ -148,8 +148,47 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+ 
         return idsBloqueados;
     }
+    
+    @Override
+    public Alumno buscarPorIdUsuario(int idUsuario) {
+        String query = "SELECT a.*, u.nombre, u.password, u.estado, u.fecha_registro, u.email, u.visible FROM Alumno a INNER JOIN Usuario u ON a.idUsuario = u.idUsuario WHERE a.idUsuario = ?";
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(query)) {
 
+            ps.setInt(1, idUsuario);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Alumno alumno = new Alumno();
+                alumno.setId(rs.getInt("idUsuario")); // el ID base del Usuario
+                alumno.setIdAlumno(rs.getInt("idAlumno"));
+                alumno.setNombre(rs.getString("nombre"));
+                alumno.setPassword(rs.getString("password"));
+                alumno.setEstado(rs.getBoolean("estado"));
+                alumno.setFechaRegistro(rs.getTimestamp("fecha_registro").toLocalDateTime());
+                alumno.setEmail(rs.getString("email"));
+                alumno.setVisible(rs.getBoolean("visible"));
+
+                alumno.setEdad(rs.getInt("edad"));
+                alumno.setCarrera(rs.getString("carrera"));
+                alumno.setFotoPerfil(rs.getString("fotoPerfil"));
+                alumno.setUbicacion(rs.getString("ubicacion"));
+                alumno.setBiografia(rs.getString("biografia"));
+
+                // Alumnos bloqueados opcional
+                List<Integer> bloqueados = obtenerAlumnosBloqueados(alumno.getId());
+                alumno.setIdsAlumnosBloqueados(bloqueados);
+
+                return alumno;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log real en prod
+        }
+
+        return null; // No es alumno
+    }
 }

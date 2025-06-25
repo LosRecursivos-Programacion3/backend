@@ -40,3 +40,4 @@ Thumbs.db
 *.ear
 /PucpConnectWS/target/
 /PucpConnectPersistence/nbproject/
+/PucpConnectBusiness/nbproject/
