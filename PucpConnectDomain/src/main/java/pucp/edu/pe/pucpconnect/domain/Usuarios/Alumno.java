@@ -8,7 +8,6 @@ import pucp.edu.pe.pucpconnect.domain.Interacciones.Mensaje;
 import pucp.edu.pe.pucpconnect.domain.Social.Evento;
 import pucp.edu.pe.pucpconnect.domain.Social.Post;
 
-
 public class Alumno extends Usuario {
     private int edad;
     private String carrera;

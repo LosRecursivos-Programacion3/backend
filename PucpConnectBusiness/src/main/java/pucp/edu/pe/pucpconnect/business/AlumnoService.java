@@ -27,6 +27,7 @@ public interface AlumnoService {
     boolean desbloquearAlumno(int idAlumno, int idBloqueado) throws Exception ;
 
     List<Integer> obtenerAlumnosBloqueados(int idAlumno) throws Exception ;
-
+    
+    public Alumno buscarPorIdUsuario(int idUsuario) throws Exception;
     /*falta editarPerfil */
 }

@@ -114,5 +114,11 @@ public class AlumnoServiceImpl implements AlumnoService {
         AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
         return dao.obtenerAlumnosBloqueados(idAlumno);
     }
+    
+    @Override
+    public Alumno buscarPorIdUsuario(int idUsuario) throws Exception {
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        return dao.buscarPorIdUsuario(idUsuario);
+    }
 
 }

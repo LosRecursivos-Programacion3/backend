@@ -17,4 +17,5 @@ public interface AlumnoDAO extends BaseDAO<Alumno> {
     boolean bloquearAlumno(int idAlumno, int idBloqueado);
     boolean desbloquearAlumno(int idAlumno, int idBloqueado);
     List<Integer> obtenerAlumnosBloqueados(int idAlumno);
+    public Alumno buscarPorIdUsuario(int idUsuario);
 }
