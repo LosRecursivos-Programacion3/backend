@@ -29,5 +29,6 @@ public interface AlumnoService {
     List<Integer> obtenerAlumnosBloqueados(int idAlumno) throws Exception ;
     
     public Alumno buscarPorIdUsuario(int idUsuario) throws Exception;
-    /*falta editarPerfil */
+    
+    public void modificarAlumno(Alumno alumno) throws Exception;
 }

@@ -191,4 +191,40 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
 
         return null; // No es alumno
     }
+    
+    @Override
+    public Alumno modificar(Alumno alumno) throws SQLException {
+        String updateUsuario = "UPDATE Usuario SET nombre = ? WHERE idUsuario = ?";
+        String updateAlumno = "UPDATE Alumno SET edad = ?, carrera = ?, fotoPerfil = ?, ubicacion = ?, biografia = ? WHERE idAlumno = ?";
+
+        try (Connection conn = DBManager.getInstance().obtenerConexion()) {
+            conn.setAutoCommit(false); // Empezamos una transacción manual
+
+            // 1. Actualizar tabla Usuario
+            try (PreparedStatement psUsuario = conn.prepareStatement(updateUsuario)) {
+                psUsuario.setString(1, alumno.getNombre());
+                psUsuario.setInt(2, alumno.getId());
+                psUsuario.executeUpdate();
+            }
+
+            // 2. Actualizar tabla Alumno
+            try (PreparedStatement psAlumno = conn.prepareStatement(updateAlumno)) {
+                psAlumno.setInt(1, alumno.getEdad());
+                psAlumno.setString(2, alumno.getCarrera());
+                psAlumno.setString(3, alumno.getFotoPerfil());
+                psAlumno.setString(4, alumno.getUbicacion());
+                psAlumno.setString(5, alumno.getBiografia());
+                psAlumno.setInt(6, alumno.getIdAlumno());
+                psAlumno.executeUpdate();
+            }
+
+            conn.commit(); // Confirmamos ambas actualizaciones
+            return alumno;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e; // Repropagamos para que el servicio lo maneje
+        }
+    }
+
 }

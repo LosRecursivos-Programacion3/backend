@@ -4,6 +4,7 @@
  */
 package pucp.edu.pe.pucpconnect.persistence.dao.Usuarios;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
@@ -18,4 +19,5 @@ public interface AlumnoDAO extends BaseDAO<Alumno> {
     boolean desbloquearAlumno(int idAlumno, int idBloqueado);
     List<Integer> obtenerAlumnosBloqueados(int idAlumno);
     public Alumno buscarPorIdUsuario(int idUsuario);
+    public Alumno modificar(Alumno alumno) throws SQLException;
 }

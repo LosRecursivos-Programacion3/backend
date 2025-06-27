@@ -120,6 +120,38 @@ public class UsuarioWS {
             throw new WebServiceException("Error al registrar intereses: " + e.getMessage(), e);
         }
     }
+    
+    @WebMethod(operationName = "actualizarAlumno")
+    public boolean actualizarAlumno(
+            @WebParam(name = "id") int id,
+            @WebParam(name = "idAlumno") int idAlumno,
+            @WebParam(name = "nombre") String nombre,
+            @WebParam(name = "edad") int edad,
+            @WebParam(name = "carrera") String carrera,
+            @WebParam(name = "fotoPerfil") String fotoPerfil,
+            @WebParam(name = "ubicacion") String ubicacion,
+            @WebParam(name = "biografia") String biografia) {
+
+        try {
+            // Armar el objeto Alumno con los datos recibidos
+            Alumno alumno = new Alumno();
+            alumno.setId(id);
+            alumno.setIdAlumno(idAlumno);
+            alumno.setNombre(nombre);
+            alumno.setEdad(edad);
+            alumno.setCarrera(carrera);
+            alumno.setFotoPerfil(fotoPerfil);
+            alumno.setUbicacion(ubicacion);
+            alumno.setBiografia(biografia);
+
+            alumnoService.modificarAlumno(alumno);
+            return true;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new WebServiceException("Error al actualizar alumno: " + ex.getMessage(), ex);
+        }
+    }
 
     @WebMethod(operationName = "cambiarVisibilidad")
     public boolean cambiarVisibilidad(@WebParam(name = "idUsuario") int idUsuario,

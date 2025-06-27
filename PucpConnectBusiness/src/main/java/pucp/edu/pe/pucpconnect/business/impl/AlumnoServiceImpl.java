@@ -120,5 +120,18 @@ public class AlumnoServiceImpl implements AlumnoService {
         AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
         return dao.buscarPorIdUsuario(idUsuario);
     }
+    
+    @Override
+    public void modificarAlumno(Alumno alumno) throws Exception {
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+
+        // Validar existencia del alumno en la BD
+        if (dao.obtener(alumno.getIdAlumno()) == null) {
+            throw new Exception("No se encontró al alumno con ID: " + alumno.getIdAlumno());
+        }
+
+        // Ya que alumno tiene todos los datos, lo mandamos directo a modificar
+        dao.modificar(alumno);
+    }
 
 }
