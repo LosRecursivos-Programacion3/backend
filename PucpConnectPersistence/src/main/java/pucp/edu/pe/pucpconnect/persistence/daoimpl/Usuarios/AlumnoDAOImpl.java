@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
+import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.DBManager;
 import pucp.edu.pe.pucpconnect.persistence.dao.Usuarios.AlumnoDAO;
@@ -226,5 +227,44 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
             throw e; // Repropagamos para que el servicio lo maneje
         }
     }
+    
+    @Override
+    public List<Alumno> listarAmigosSugeridos(List<Interes> intereses, int idAlumnoBuscador) throws SQLException {
+        List<Alumno> sugeridos = new ArrayList<>();
 
+        // Convertir lista de intereses a CSV
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < intereses.size(); i++) {
+            sb.append(intereses.get(i).getId());
+            if (i < intereses.size() - 1) sb.append(",");
+        }
+        String interesesCsv = sb.toString();
+
+        String sql = "{CALL sp_sugerir_amigos(?, ?)}";
+
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            cs.setString(1, interesesCsv);
+            cs.setInt(2, idAlumnoBuscador);
+
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    Alumno a = new Alumno();
+                    a.setIdAlumno(rs.getInt("idAlumno"));
+                    a.setEdad(rs.getInt("edad"));
+                    a.setCarrera(rs.getString("carrera"));
+                    a.setFotoPerfil(rs.getString("fotoPerfil"));
+                    a.setUbicacion(rs.getString("ubicacion"));
+                    a.setBiografia(rs.getString("biografia"));
+                    a.setId(rs.getInt("idUsuario"));
+                    a.setNombre(rs.getString("nombre"));
+                    sugeridos.add(a);
+                }
+            }
+        }
+
+        return sugeridos;
+    }
+    
 }

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
+import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
 
 /**
@@ -20,4 +21,5 @@ public interface AlumnoDAO extends BaseDAO<Alumno> {
     List<Integer> obtenerAlumnosBloqueados(int idAlumno);
     public Alumno buscarPorIdUsuario(int idUsuario);
     public Alumno modificar(Alumno alumno) throws SQLException;
+    public List<Alumno> listarAmigosSugeridos(List<Interes> intereses, int idAlumnoBuscador) throws SQLException;
 }
