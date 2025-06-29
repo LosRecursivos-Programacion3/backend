@@ -8,8 +8,8 @@ import pucp.edu.pe.pucpconnect.domain.Interacciones.Mensaje;
 import pucp.edu.pe.pucpconnect.domain.Social.Evento;
 import pucp.edu.pe.pucpconnect.domain.Social.Post;
 
-
 public class Alumno extends Usuario {
+    private int idAlumno;
     private int edad;
     private String carrera;
     private String fotoPerfil;
@@ -22,10 +22,11 @@ public class Alumno extends Usuario {
     public Alumno() { super(); }
 
     public Alumno(int id, String nombre, String password, boolean estado,
-                  LocalDateTime fechaRegistro, String email,
+                  LocalDateTime fechaRegistro, String email, int idAlumno,
                   int edad, String carrera, String fotoPerfil,
                   String ubicacion, String biografia) {
         super(id, nombre, password, estado, fechaRegistro, email);
+        this.idAlumno = idAlumno;
         this.edad = edad;
         this.carrera = carrera;
         this.fotoPerfil = fotoPerfil;
@@ -66,6 +67,14 @@ public class Alumno extends Usuario {
     /**
      * @return the edad
      */
+    public int getIdAlumno(){
+        return idAlumno;
+    }
+    
+    public void setIdAlumno(int idAlumno){
+        this.idAlumno = idAlumno;
+    }
+    
     public int getEdad() {
         return edad;
     }

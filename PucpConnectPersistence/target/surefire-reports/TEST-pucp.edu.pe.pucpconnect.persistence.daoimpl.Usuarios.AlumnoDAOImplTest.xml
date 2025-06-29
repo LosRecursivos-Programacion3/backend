@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImplTest" time="1.761" tests="2" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImplTest" time="2.524" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -59,9 +59,21 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testBuscarPorId" classname="pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImplTest" time="0.879">
-    <system-out><![CDATA[Iniciando tests de UsuarioDAOImpl...
+  <testcase name="testBuscarPorIdUsuario" classname="pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImplTest" time="2.489">
+    <system-out><![CDATA[=== testBuscarPorIdUsuario ===
+Alumno encontrado:
+ID: 42
+Nombre: Fernando De La Cruz
+Password: 123456
+Estado: true
+Fecha de registro: 2025-06-23T11:25:22
+Email: ftest@pucp.edu.pe
+Visible: true
+Edad: 24
+Carrera: Ing. Informatica
+Foto Perfil: interfacus.jpg
+Ubicación: AV. Universitaria
+Biografía: Ingeniero Informático, Desarrolador de PUCP Connect, plataforma de integración para miembros de la comunidad PUCP. Integrante del grupo: Los Recursivos.
 ]]></system-out>
   </testcase>
-  <testcase name="testGetInsertPS" classname="pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImplTest" time="0.872"/>
 </testsuite>

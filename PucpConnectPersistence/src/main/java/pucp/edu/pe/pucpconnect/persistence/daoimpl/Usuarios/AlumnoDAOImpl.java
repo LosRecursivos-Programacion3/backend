@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
+import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.DBManager;
 import pucp.edu.pe.pucpconnect.persistence.dao.Usuarios.AlumnoDAO;
@@ -148,8 +149,134 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+ 
         return idsBloqueados;
     }
+    
+    @Override
+    public Alumno buscarPorIdUsuario(int idUsuario) {
+        String query = "SELECT a.*, u.nombre, u.password, u.estado, u.fecha_registro, u.email, u.visible FROM Alumno a INNER JOIN Usuario u ON a.idUsuario = u.idUsuario WHERE a.idUsuario = ?";
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(query)) {
 
+            ps.setInt(1, idUsuario);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Alumno alumno = new Alumno();
+                alumno.setId(rs.getInt("idUsuario")); // el ID base del Usuario
+                alumno.setIdAlumno(rs.getInt("idAlumno"));
+                alumno.setNombre(rs.getString("nombre"));
+                alumno.setPassword(rs.getString("password"));
+                alumno.setEstado(rs.getBoolean("estado"));
+                alumno.setFechaRegistro(rs.getTimestamp("fecha_registro").toLocalDateTime());
+                alumno.setEmail(rs.getString("email"));
+                alumno.setVisible(rs.getBoolean("visible"));
+
+                alumno.setEdad(rs.getInt("edad"));
+                alumno.setCarrera(rs.getString("carrera"));
+                alumno.setFotoPerfil(rs.getString("fotoPerfil"));
+                alumno.setUbicacion(rs.getString("ubicacion"));
+                alumno.setBiografia(rs.getString("biografia"));
+
+                // Alumnos bloqueados opcional
+                List<Integer> bloqueados = obtenerAlumnosBloqueados(alumno.getId());
+                alumno.setIdsAlumnosBloqueados(bloqueados);
+
+                return alumno;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log real en prod
+        }
+
+        return null; // No es alumno
+    }
+    
+    @Override
+    public Alumno modificar(Alumno alumno) throws SQLException {
+        String updateUsuario = "UPDATE Usuario SET nombre = ? WHERE idUsuario = ?";
+        String updateAlumno = "UPDATE Alumno SET edad = ?, carrera = ?, fotoPerfil = ?, ubicacion = ?, biografia = ? WHERE idAlumno = ?";
+
+        try (Connection conn = DBManager.getInstance().obtenerConexion()) {
+            conn.setAutoCommit(false); // Empezamos una transacción manual
+
+            // 1. Actualizar tabla Usuario
+            try (PreparedStatement psUsuario = conn.prepareStatement(updateUsuario)) {
+                psUsuario.setString(1, alumno.getNombre());
+                psUsuario.setInt(2, alumno.getId());
+                psUsuario.executeUpdate();
+            }
+
+            // 2. Actualizar tabla Alumno
+            try (PreparedStatement psAlumno = conn.prepareStatement(updateAlumno)) {
+                psAlumno.setInt(1, alumno.getEdad());
+                psAlumno.setString(2, alumno.getCarrera());
+                psAlumno.setString(3, alumno.getFotoPerfil());
+                psAlumno.setString(4, alumno.getUbicacion());
+                psAlumno.setString(5, alumno.getBiografia());
+                psAlumno.setInt(6, alumno.getIdAlumno());
+                psAlumno.executeUpdate();
+            }
+
+            conn.commit(); // Confirmamos ambas actualizaciones
+            return alumno;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e; // Repropagamos para que el servicio lo maneje
+        }
+    }
+    
+    @Override
+    public List<Alumno> listarAmigosSugeridos(List<Interes> intereses, int idAlumnoBuscador) throws SQLException {
+        List<Alumno> sugeridos = new ArrayList<>();
+
+        // Convertir lista de intereses a CSV
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < intereses.size(); i++) {
+            sb.append(intereses.get(i).getId());
+            if (i < intereses.size() - 1) sb.append(",");
+        }
+        String interesesCsv = sb.toString();
+
+        String sql = "{CALL sp_sugerir_amigos(?, ?)}";
+
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            cs.setString(1, interesesCsv);
+            cs.setInt(2, idAlumnoBuscador);
+
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    Alumno a = new Alumno();
+                    a.setIdAlumno(rs.getInt("idAlumno"));
+                    a.setEdad(rs.getInt("edad"));
+                    a.setCarrera(rs.getString("carrera"));
+                    a.setFotoPerfil(rs.getString("fotoPerfil"));
+                    a.setUbicacion(rs.getString("ubicacion"));
+                    a.setBiografia(rs.getString("biografia"));
+                    a.setId(rs.getInt("idUsuario"));
+                    a.setNombre(rs.getString("nombre"));
+                    sugeridos.add(a);
+                }
+            }
+        }
+
+        return sugeridos;
+    }
+    
+    @Override
+    public void registrarSolicitudAmistad(int idUsuario1, int idUsuario2) throws SQLException{
+        String sql = "INSERT INTO Amistades (idAlumnoUno, idAlumnoDos, estado, fecha) VALUES (?,?,?,NOW())";
+        try(Connection conn = DBManager.getInstance().obtenerConexion();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1, idUsuario1);
+            ps.setInt(2, idUsuario2);
+            ps.setInt(3, 0);
+            
+            ps.executeUpdate();
+        }
+    }
 }
