@@ -49,6 +49,16 @@
             <artifactId>PucpConnectBusiness</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+        <groupId>net.sf.jasperreports</groupId>
+        <artifactId>jasperreports</artifactId>
+        <version>7.0.3</version> 
+      </dependency>
+      <dependency>
+        <groupId>com.lowagie</groupId>
+        <artifactId>itext</artifactId>
+        <version>2.1.7</version>
+      </dependency>
     </dependencies>
     
     <build>
