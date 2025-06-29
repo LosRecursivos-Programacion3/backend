@@ -11,3 +11,4 @@ pucp\edu\pe\pucpconnect\domain\Usuarios\Alumno.class
 pucp\edu\pe\pucpconnect\domain\Interacciones\ReaccionTipo.class
 pucp\edu\pe\pucpconnect\domain\Usuarios\Administrador.class
 pucp\edu\pe\pucpconnect\domain\Usuarios\Usuario.class
+pucp\edu\pe\pucpconnect\domain\Social\Amistad.class

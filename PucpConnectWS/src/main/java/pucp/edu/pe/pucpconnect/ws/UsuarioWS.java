@@ -17,6 +17,7 @@ import pucp.edu.pe.pucpconnect.business.UsuarioService;
 import pucp.edu.pe.pucpconnect.business.impl.AlumnoServiceImpl;
 import pucp.edu.pe.pucpconnect.business.impl.InteresServiceImpl;
 import pucp.edu.pe.pucpconnect.business.impl.UsuarioServiceImpl;
+import pucp.edu.pe.pucpconnect.domain.Social.Amistad;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Usuario;
@@ -220,6 +221,57 @@ public class UsuarioWS {
                                  @WebParam(name = "idUsuario2") int idUsuario2){
         try{
             alumnoService.enviarSolicitudAmistad(idUsuario1, idUsuario2);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+        }
+    }
+    @WebMethod(operationName= "listarSolicitudesEnviadas")
+    public List<Amistad> listarSolicitudesEnviadas(@WebParam(name = "idAlumno") int idAlumno){
+        try{
+            return alumnoService.listarSolicitudesEnviadas(idAlumno);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+        }
+    }
+    @WebMethod(operationName= "listarSolicitudesRecibidas")
+    public List<Amistad> listarSolicitudesRecibidas(@WebParam(name = "idAlumno") int idAlumno){
+        try{
+            return alumnoService.listarSolicitudesRecibidas(idAlumno);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+        }
+    }
+    @WebMethod(operationName= "aceptarSolicitud")
+    public void aceptarSolicitud(@WebParam(name = "idAmistad") int idAmistad){
+        try{
+            alumnoService.aceptarSolicitud(idAmistad);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+        }
+    }
+    
+    @WebMethod(operationName= "rechazarSolicitud")
+    public void rechazarSolicitud(@WebParam(name = "idAmistad") int idAmistad){
+        try{
+            alumnoService.rechazarSolicitud(idAmistad);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+        }
+    }
+    
+    @WebMethod(operationName= "cancelarSolicitud")
+    public void cancelarSolicitud(@WebParam(name = "idAmistad") int idAmistad){
+        try{
+            alumnoService.cancelarSolicitud(idAmistad);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+        }
+    }
+    
+    @WebMethod(operationName= "listarAmigosPorId")
+    public List<Alumno> listarAmigosPorId(@WebParam(name = "idUsuario") int idUsuario){
+        try{
+            return alumnoService.obtenerAmigosPorUsuario(idUsuario);
         } catch (Exception e) {
             throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
         }
