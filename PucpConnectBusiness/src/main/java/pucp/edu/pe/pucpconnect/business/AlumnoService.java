@@ -31,4 +31,8 @@ public interface AlumnoService {
     public Alumno buscarPorIdUsuario(int idUsuario) throws Exception;
     
     public void modificarAlumno(Alumno alumno) throws Exception;
+    
+    public List<Alumno> listarAlumnosSugeridos(List<Interes> intereses, int idAlumno) throws Exception;
+    
+    public void enviarSolicitudAmistad(int idUsuario1, int idUsuario2) throws Exception;
 }

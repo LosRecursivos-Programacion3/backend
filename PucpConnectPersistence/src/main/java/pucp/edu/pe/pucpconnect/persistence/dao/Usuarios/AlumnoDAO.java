@@ -22,4 +22,5 @@ public interface AlumnoDAO extends BaseDAO<Alumno> {
     public Alumno buscarPorIdUsuario(int idUsuario);
     public Alumno modificar(Alumno alumno) throws SQLException;
     public List<Alumno> listarAmigosSugeridos(List<Interes> intereses, int idAlumnoBuscador) throws SQLException;
+    public void registrarSolicitudAmistad(int idUsuario1, int idUsuario2) throws SQLException;
 }

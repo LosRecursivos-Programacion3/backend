@@ -267,4 +267,16 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
         return sugeridos;
     }
     
+    @Override
+    public void registrarSolicitudAmistad(int idUsuario1, int idUsuario2) throws SQLException{
+        String sql = "INSERT INTO Amistades (idAlumnoUno, idAlumnoDos, estado, fecha) VALUES (?,?,?,NOW())";
+        try(Connection conn = DBManager.getInstance().obtenerConexion();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1, idUsuario1);
+            ps.setInt(2, idUsuario2);
+            ps.setInt(3, 0);
+            
+            ps.executeUpdate();
+        }
+    }
 }

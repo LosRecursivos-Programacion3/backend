@@ -133,5 +133,15 @@ public class AlumnoServiceImpl implements AlumnoService {
         // Ya que alumno tiene todos los datos, lo mandamos directo a modificar
         dao.modificar(alumno);
     }
-
+    @Override
+    public List<Alumno> listarAlumnosSugeridos(List<Interes> intereses, int idAlumno) throws Exception{
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        return dao.listarAmigosSugeridos(intereses, idAlumno);
+    }
+    
+    @Override
+    public void enviarSolicitudAmistad(int idUsuario1, int idUsuario2) throws Exception {
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        dao.registrarSolicitudAmistad(idUsuario1, idUsuario2);
+    }
 }
