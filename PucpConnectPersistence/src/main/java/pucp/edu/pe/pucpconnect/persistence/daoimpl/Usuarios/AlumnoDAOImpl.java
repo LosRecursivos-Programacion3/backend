@@ -5,8 +5,11 @@
 package pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import pucp.edu.pe.pucpconnect.domain.Social.Amistad;
 
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
@@ -279,4 +282,130 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
             ps.executeUpdate();
         }
     }
+    
+    @Override
+    public List<Amistad> listarSolicitudesEnviadas(int idAlumno) throws SQLException {
+        String sql = "SELECT a.idAmistad, a.estado, a.fecha, al1.idAlumno AS idAlumnoUno, u1.nombre AS nombreAlumnoUno, al1.fotoPerfil AS fotoPerfilAlumnoUno, al2.idAlumno AS idAlumnoDos, u2.nombre AS nombreAlumnoDos, al2.fotoPerfil AS fotoPerfilAlumnoDos FROM Amistades a INNER JOIN Alumno al1 ON a.idAlumnoUno = al1.idAlumno INNER JOIN Usuario u1 ON u1.idUsuario = al1.idUsuario INNER JOIN Alumno al2 ON a.idAlumnoDos = al2.idAlumno INNER JOIN Usuario u2 ON u2.idUsuario = al2.idUsuario WHERE a.idAlumnoUno = ? AND a.estado = 0;";
+        List<Amistad> amistades = new ArrayList<>();
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idAlumno);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Amistad amistad = new Amistad();
+                amistad.setIdAmistad(rs.getInt("idAmistad"));
+                amistad.setIdAlumnoUno(rs.getInt("idAlumnoUno"));
+                amistad.setIdAlumnoDos(rs.getInt("idAlumnoDos"));
+                amistad.setEstado(rs.getInt("estado"));
+                amistad.setFotoPerfilAlumnoUno(rs.getString("fotoPerfilAlumnoUno"));
+                amistad.setFotoPerfilAlumnoDos(rs.getString("fotoPerfilAlumnoDos"));
+                amistad.setNombreAlumnoUno(rs.getString("nombreAlumnoUno"));
+                amistad.setNombreAlumnoDos(rs.getString("nombreAlumnoDos"));
+                LocalDateTime fecha = rs.getTimestamp("fecha").toLocalDateTime();
+                amistad.setFecha(fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+                amistades.add(amistad);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log real en prod
+        }
+        return amistades;
+    }
+    
+    @Override
+    public List<Amistad> listarSolicitudesRecibidas(int idAlumno) throws SQLException {
+        String sql = "SELECT a.idAmistad, a.estado, a.fecha, al1.idAlumno AS idAlumnoUno, u1.nombre AS nombreAlumnoUno, al1.fotoPerfil AS fotoPerfilAlumnoUno, al2.idAlumno AS idAlumnoDos, u2.nombre AS nombreAlumnoDos, al2.fotoPerfil AS fotoPerfilAlumnoDos FROM Amistades a INNER JOIN Alumno al1 ON a.idAlumnoUno = al1.idAlumno INNER JOIN Usuario u1 ON u1.idUsuario = al1.idUsuario INNER JOIN Alumno al2 ON a.idAlumnoDos = al2.idAlumno INNER JOIN Usuario u2 ON u2.idUsuario = al2.idUsuario WHERE a.idAlumnoDos = ? AND a.estado = 0;";
+        List<Amistad> amistades = new ArrayList<>();
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idAlumno);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Amistad amistad = new Amistad();
+                amistad.setIdAmistad(rs.getInt("idAmistad"));
+                amistad.setIdAlumnoUno(rs.getInt("idAlumnoUno"));
+                amistad.setIdAlumnoDos(rs.getInt("idAlumnoDos"));
+                amistad.setEstado(rs.getInt("estado"));
+                amistad.setFotoPerfilAlumnoUno(rs.getString("fotoPerfilAlumnoUno"));
+                amistad.setFotoPerfilAlumnoDos(rs.getString("fotoPerfilAlumnoDos"));
+                amistad.setNombreAlumnoUno(rs.getString("nombreAlumnoUno"));
+                amistad.setNombreAlumnoDos(rs.getString("nombreAlumnoDos"));
+                LocalDateTime fecha = rs.getTimestamp("fecha").toLocalDateTime();
+                amistad.setFecha(fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+                amistades.add(amistad);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log real en prod
+        }
+        return amistades;
+    }
+    
+    @Override
+    public void actualizarEstadoAmistad(int idAmistad, int nuevoEstado) throws SQLException {
+        String sql = "UPDATE Amistades SET estado = ? WHERE idAmistad = ?";
+
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, nuevoEstado);
+            ps.setInt(2, idAmistad);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace(); // En producción usar logger
+            throw e; // Opcionalmente relanza la excepción para manejarla en capa superior
+        }
+    }
+    @Override
+    public List<Alumno> obtenerAmigosPorUsuario(int usuarioId) throws SQLException {
+        String sql =
+          "SELECT u.idUsuario, u.nombre, u.password, u.estado AS usuarioEstado, "
+        + "       u.fecha_Registro, u.email, u.visible, "
+        + "       a.idAlumno, a.edad, a.carrera, a.fotoPerfil, a.ubicacion, a.biografia "
+        + "  FROM Usuario u "
+        + "  INNER JOIN Alumno a ON u.idUsuario = a.idUsuario "
+        + "  INNER JOIN Amistades am ON ( "
+        + "       (am.idAlumnoUno = ? AND am.idAlumnoDos   = a.idAlumno) "
+        + "    OR (am.idAlumnoDos = ? AND am.idAlumnoUno   = a.idAlumno) ) "
+        + " WHERE am.estado = 1";
+
+        List<Alumno> amigos = new ArrayList<>();
+
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, usuarioId);
+            ps.setInt(2, usuarioId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Alumno a = new Alumno();
+                    // Campos de Usuario
+                    a.setId(rs.getInt("idUsuario"));
+                    a.setNombre(rs.getString("nombre"));
+                    a.setPassword(rs.getString("password"));
+                    a.setEstado(rs.getBoolean("usuarioEstado"));
+                    a.setFechaRegistro(rs.getTimestamp("fecha_registro")
+                                          .toLocalDateTime());
+                    a.setEmail(rs.getString("email"));
+                    a.setVisible(rs.getBoolean("visible"));
+
+                    // Campos de Alumno
+                    a.setIdAlumno(   rs.getInt("idAlumno"));
+                    a.setEdad(       rs.getInt("edad"));
+                    a.setCarrera(    rs.getString("carrera"));
+                    a.setFotoPerfil(rs.getString("fotoPerfil"));
+                    a.setUbicacion( rs.getString("ubicacion"));
+                    a.setBiografia( rs.getString("biografia"));
+
+                    amigos.add(a);
+                }
+            }
+        }
+
+        return amigos;
+    }
 }
+
+

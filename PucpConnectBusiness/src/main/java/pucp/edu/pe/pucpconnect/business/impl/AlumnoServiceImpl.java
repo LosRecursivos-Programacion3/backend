@@ -1,5 +1,6 @@
 package pucp.edu.pe.pucpconnect.business.impl;
 
+import java.sql.SQLException;
 import pucp.edu.pe.pucpconnect.business.AlumnoService;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
@@ -7,6 +8,7 @@ import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
 import pucp.edu.pe.pucpconnect.persistence.dao.Usuarios.AlumnoDAO;
 
 import java.util.List;
+import pucp.edu.pe.pucpconnect.domain.Social.Amistad;
 import pucp.edu.pe.pucpconnect.domain.Social.Evento;
 
 public class AlumnoServiceImpl implements AlumnoService {
@@ -143,5 +145,41 @@ public class AlumnoServiceImpl implements AlumnoService {
     public void enviarSolicitudAmistad(int idUsuario1, int idUsuario2) throws Exception {
         AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
         dao.registrarSolicitudAmistad(idUsuario1, idUsuario2);
+    }
+    
+    @Override
+    public List<Amistad> listarSolicitudesEnviadas(int idAlumno) throws Exception {
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        return dao.listarSolicitudesEnviadas(idAlumno);
+    }
+    
+    @Override
+    public List<Amistad> listarSolicitudesRecibidas(int idAlumno) throws Exception {
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        return dao.listarSolicitudesRecibidas(idAlumno);
+    }
+    
+    @Override
+    public void aceptarSolicitud(int idAmistad) throws Exception {
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        dao.actualizarEstadoAmistad(idAmistad,1);
+    }
+    
+    @Override
+    public void rechazarSolicitud(int idAmistad) throws Exception {
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        dao.actualizarEstadoAmistad(idAmistad,2);
+    }
+    
+    @Override
+    public void cancelarSolicitud(int idAmistad) throws Exception{
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        dao.actualizarEstadoAmistad(idAmistad, 3);
+    }
+    
+    @Override
+    public List<Alumno> obtenerAmigosPorUsuario(int usuarioId) throws SQLException{
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        return dao.obtenerAmigosPorUsuario(usuarioId);
     }
 }
