@@ -1,5 +1,13 @@
 package pucp.edu.pe.pucpconnect.business.impl;
 
+import pucp.edu.pe.pucpconnect.business.ReporteService;
+import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
+import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
+import pucp.edu.pe.pucpconnect.persistence.dao.Usuarios.InteresDAO;
+
+
+package pucp.edu.pe.pucpconnect.business.impl;
+
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.util.JRLoader;
 
@@ -10,21 +18,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class ReporteServiceImpl implements ReporteService {
-    @Override
-    public byte[] generarReporteUsuarios() throws Exception {
-        // 1. Cargar el archivo .jasper o .jrxml
-        InputStream reporte = getClass().getResourceAsStream("/reportes/usuarios.jasper");
+@Override
+public byte[] generarReporteEventosParticipantesPDF(Connection conn) throws JRException {
+    InputStream reporte = getClass().getResourceAsStream("/reportes/eventos_participantes.jasper");
+    JasperPrint print = JasperFillManager.fillReport(reporte, null, conn);
+    return JasperExportManager.exportReportToPdf(print);
+}
 
-        // 2. Pasar parámetros (si los hay)
-        Map<String, Object> parametros = new HashMap<>();
-        parametros.put("titulo", "Lista de usuarios");
-
-        // 3. Llenar el reporte (puede ser desde una conexión JDBC o colección de JavaBeans)
-        Connection conn = dataSource.getConnection(); // o usar JRBeanCollectionDataSource
-        JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, parametros, conn);
-
-        // 4. Exportar a PDF
-        return JasperExportManager.exportReportToPdf(jasperPrint);
-    }
+@Override
+public byte[] generarReporteAlumnosPorCarreraPDF(Connection conn) throws JRException {
+    InputStream reporte = getClass().getResourceAsStream("/reportes/alumnos_por_carrera.jasper");
+    JasperPrint print = JasperFillManager.fillReport(reporte, null, conn);
+    return JasperExportManager.exportReportToPdf(print);
 }
