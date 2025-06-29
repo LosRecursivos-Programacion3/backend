@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import pucp.edu.pe.pucpconnect.domain.Social.Amistad;
+import pucp.edu.pe.pucpconnect.domain.Social.Post;
 
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
@@ -65,7 +66,7 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
 
     @Override
     protected PreparedStatement getSelectByIdPS(Connection conn, Integer id) throws SQLException {
-        String query = "SELECT * FROM Usuario u INNER JOIN Alumno a ON u.idUsuario = a.idAlumno WHERE u.idUsuario = ?";
+        String query = "SELECT * FROM Usuario u INNER JOIN Alumno a ON u.idUsuario = a.idUsuario WHERE u.idUsuario = ?";
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setInt(1, id);
         return ps;
@@ -80,7 +81,8 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
     @Override
     protected Alumno createFromResultSet(ResultSet rs) throws SQLException {
         Alumno alumno = new Alumno();
-        alumno.setId(rs.getInt("idAlumno"));
+        alumno.setId(rs.getInt("idUsuario"));
+        alumno.setIdAlumno(rs.getInt("idAlumno"));
         alumno.setNombre(rs.getString("nombre"));
         alumno.setPassword(rs.getString("password"));
         alumno.setEstado(rs.getBoolean("estado"));
@@ -405,6 +407,33 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
         }
 
         return amigos;
+    }
+    @Override
+    public List<Post> obtenerPostPorUsuario(int usuarioId) throws SQLException {
+        String sql = "SELECT * FROM Post p WHERE p.autor_id = ? ORDER BY 3 DESC";
+
+        List<Post> posts = new ArrayList<>();
+
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, usuarioId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Post p = new Post();
+                    // Campos de Usuario
+                    p.setIdPost(rs.getInt("idPost"));
+                    p.setContenido(rs.getString("contenido"));
+                    p.setFecha(rs.getTimestamp("fecha").toLocalDateTime());
+                    p.setEstado(rs.getBoolean("estado"));
+                    p.setImagen(rs.getString("imagen"));
+                    p.setAutor(rs.getInt("autor_id"));
+                    posts.add(p);
+                }
+            }
+        }
+        return posts;
     }
 }
 

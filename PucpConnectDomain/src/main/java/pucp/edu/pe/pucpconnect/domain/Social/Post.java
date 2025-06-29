@@ -17,19 +17,19 @@ import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
  */
 public class Post {
     private int idPost;
-    private String nombre;
     private String contenido;
+    private String imagen;
     private LocalDateTime fecha;
     private boolean estado;
-    private Alumno autor;
+    private int autor;
     private List<Reaccion> reacciones;
 
     public Post() {}
 
-    public Post(int idPost, String nombre, String contenido, LocalDateTime fecha, boolean estado, Alumno autor) {
+    public Post(int idPost, String contenido, String imagen, LocalDateTime fecha, boolean estado, int autor) {
         this.idPost = idPost;
-        this.nombre = nombre;
         this.contenido = contenido;
+        this.imagen = imagen;
         this.fecha = fecha;
         this.estado = estado;
         this.autor = autor;
@@ -63,14 +63,6 @@ public class Post {
         this.idPost = idPost;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     public String getContenido() {
         return contenido;
     }
@@ -95,11 +87,25 @@ public class Post {
         this.estado = estado;
     }
 
-    public Alumno getAutor() {
+    public int getAutor() {
         return autor;
     }
 
-    public void setAutor(Alumno autor) {
+    public void setAutor(int autor) {
         this.autor = autor;
+    }
+
+    /**
+     * @return the imagen
+     */
+    public String getImagen() {
+        return imagen;
+    }
+
+    /**
+     * @param imagen the imagen to set
+     */
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 }

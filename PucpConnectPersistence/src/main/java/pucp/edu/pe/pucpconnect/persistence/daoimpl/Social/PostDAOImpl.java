@@ -16,14 +16,16 @@ import pucp.edu.pe.pucpconnect.persistence.dao.Social.PostDAO;
 public class PostDAOImpl extends BaseDAOImpl<Post> implements PostDAO {
     @Override
     protected PreparedStatement getInsertPS(Connection conn, Post post) throws SQLException {
-        String query = "{CALL sp_registrar_post(?, ?, ?, ?, ?)}"; // Procedimiento almacenado para insertar post
-        CallableStatement cs = conn.prepareCall(query);
-        cs.setInt(4, post.getAutor().getId());
-        cs.setString(1, post.getContenido());
-        cs.setTimestamp(2, Timestamp.valueOf(post.getFecha())); // Fecha del post
-        cs.setBoolean(3, post.isEstado());
-        cs.registerOutParameter(5, Types.INTEGER); // Para obtener el ID generado
-        return cs;
+        String query = "INSERT INTO Post (contenido, fecha, estado, autor_id, imagen) VALUES (?, ?, ?, ?, ?)";
+
+        PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+        ps.setString(1, post.getContenido());
+        ps.setTimestamp(2, Timestamp.valueOf(post.getFecha()));
+        ps.setBoolean(3, post.isEstado());
+        ps.setInt(4, post.getAutor());
+        ps.setString(5, post.getImagen());
+        return ps;
     }
 
     @Override

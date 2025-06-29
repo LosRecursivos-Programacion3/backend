@@ -34,8 +34,13 @@ public class Alumno extends Usuario {
         this.biografia = biografia;
     }
 
-    public Post crearPost(String nombre, String contenido) {
-        return new Post(0, nombre, contenido, LocalDateTime.now(), true, this);
+    public Post crearPost(String contenido, String imagen) {
+        if(imagen == null){
+            return new Post(0, contenido, null, LocalDateTime.now(), true, this.idAlumno);
+        } else {
+            return new Post(0, contenido, imagen, LocalDateTime.now(), true, this.idAlumno);
+        }
+        
     }
 
     public Evento crearEvento(String nombre, String descripcion,

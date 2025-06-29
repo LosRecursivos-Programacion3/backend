@@ -7,6 +7,7 @@ package pucp.edu.pe.pucpconnect.persistence.dao.Usuarios;
 import java.sql.SQLException;
 import java.util.List;
 import pucp.edu.pe.pucpconnect.domain.Social.Amistad;
+import pucp.edu.pe.pucpconnect.domain.Social.Post;
 
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
@@ -28,4 +29,5 @@ public interface AlumnoDAO extends BaseDAO<Alumno> {
     public List<Amistad> listarSolicitudesRecibidas(int idAlumno) throws SQLException;
     public void actualizarEstadoAmistad(int idAmistad, int nuevoEstado) throws SQLException;
     public List<Alumno> obtenerAmigosPorUsuario(int usuarioId) throws SQLException;
+    public List<Post> obtenerPostPorUsuario(int usuarioId) throws SQLException;
 }

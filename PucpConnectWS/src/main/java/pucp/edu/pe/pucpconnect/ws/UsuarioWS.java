@@ -13,15 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 import pucp.edu.pe.pucpconnect.business.AlumnoService;
 import pucp.edu.pe.pucpconnect.business.InteresService;
+import pucp.edu.pe.pucpconnect.business.PostService;
 import pucp.edu.pe.pucpconnect.business.UsuarioService;
 import pucp.edu.pe.pucpconnect.business.impl.AlumnoServiceImpl;
 import pucp.edu.pe.pucpconnect.business.impl.InteresServiceImpl;
+import pucp.edu.pe.pucpconnect.business.impl.PostServiceImpl;
 import pucp.edu.pe.pucpconnect.business.impl.UsuarioServiceImpl;
 import pucp.edu.pe.pucpconnect.domain.Social.Amistad;
+import pucp.edu.pe.pucpconnect.domain.Social.Post;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Usuario;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
+import pucp.edu.pe.pucpconnect.persistence.daoimpl.Social.PostDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.InteresDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImpl;
@@ -36,6 +40,7 @@ public class UsuarioWS {
     private final AlumnoService alumnoService;
     private final UsuarioService usuarioService;
     private final InteresService interesService;
+    private final PostService postService;
     public UsuarioWS(){
         BaseDAO<Alumno> alumnoDAO = new AlumnoDAOImpl();
         alumnoService = new AlumnoServiceImpl(alumnoDAO);
@@ -45,6 +50,9 @@ public class UsuarioWS {
         
         BaseDAO<Interes> interesDAO = new InteresDAOImpl();
         interesService = new InteresServiceImpl(interesDAO);
+        
+        BaseDAO<Post> postDAO = new PostDAOImpl();
+        postService = new PostServiceImpl(postDAO);
     }
     
     @WebMethod(operationName = "registrarAlumno")
@@ -212,7 +220,7 @@ public class UsuarioWS {
             List<Alumno> alumnosSugeridos = alumnoService.listarAlumnosSugeridos(intereses, idAlumno);
             return alumnosSugeridos;
         } catch (Exception e) {
-            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+            throw new WebServiceException("Error al listar sugeridos: " + e.getMessage(), e);
         }
     }
     
@@ -222,7 +230,7 @@ public class UsuarioWS {
         try{
             alumnoService.enviarSolicitudAmistad(idUsuario1, idUsuario2);
         } catch (Exception e) {
-            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+            throw new WebServiceException("Error al enviar solicitud amistad: " + e.getMessage(), e);
         }
     }
     @WebMethod(operationName= "listarSolicitudesEnviadas")
@@ -230,7 +238,7 @@ public class UsuarioWS {
         try{
             return alumnoService.listarSolicitudesEnviadas(idAlumno);
         } catch (Exception e) {
-            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+            throw new WebServiceException("Error al listar solicitudes enviadas: " + e.getMessage(), e);
         }
     }
     @WebMethod(operationName= "listarSolicitudesRecibidas")
@@ -238,7 +246,7 @@ public class UsuarioWS {
         try{
             return alumnoService.listarSolicitudesRecibidas(idAlumno);
         } catch (Exception e) {
-            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+            throw new WebServiceException("Error al listar solicitudes recibidas: " + e.getMessage(), e);
         }
     }
     @WebMethod(operationName= "aceptarSolicitud")
@@ -246,7 +254,7 @@ public class UsuarioWS {
         try{
             alumnoService.aceptarSolicitud(idAmistad);
         } catch (Exception e) {
-            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+            throw new WebServiceException("Error al aceptar solicitud: " + e.getMessage(), e);
         }
     }
     
@@ -255,7 +263,7 @@ public class UsuarioWS {
         try{
             alumnoService.rechazarSolicitud(idAmistad);
         } catch (Exception e) {
-            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+            throw new WebServiceException("Error al rechazar solicitud: " + e.getMessage(), e);
         }
     }
     
@@ -264,7 +272,7 @@ public class UsuarioWS {
         try{
             alumnoService.cancelarSolicitud(idAmistad);
         } catch (Exception e) {
-            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+            throw new WebServiceException("Error al cancelar solicitud: " + e.getMessage(), e);
         }
     }
     
@@ -273,7 +281,31 @@ public class UsuarioWS {
         try{
             return alumnoService.obtenerAmigosPorUsuario(idUsuario);
         } catch (Exception e) {
-            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+            throw new WebServiceException("Error al listar amigos: " + e.getMessage(), e);
+        }
+    }
+    
+    @WebMethod(operationName= "crearPost")
+    public void crearPost(@WebParam(name = "contenido") String contenido, @WebParam(name = "archivo") String archivo, @WebParam(name = "idUsuario") int idUsuario){
+        try{
+            if(archivo == null || archivo.trim().isEmpty() || archivo.equals("null|#]")) {
+                archivo = null;
+            }
+            Alumno alumno = alumnoService.buscarPorId(idUsuario);
+            System.out.println("Alumno recibido: " + alumno.getIdAlumno() + alumno.getNombre());
+            postService.crearPost(contenido, archivo, alumno);
+            
+        } catch (Exception e) {
+            throw new WebServiceException("Error al crear post: " + e.getMessage(), e);
+        }
+    }
+    
+    @WebMethod(operationName= "listarPostPorId")
+    public List<Post> listarPostPorId(@WebParam(name = "idUsuario") int idUsuario){
+        try{
+            return alumnoService.obtenerPostPorUsuario(idUsuario);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al listar amigos: " + e.getMessage(), e);
         }
     }
 }

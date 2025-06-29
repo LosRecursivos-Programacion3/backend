@@ -10,6 +10,7 @@ import pucp.edu.pe.pucpconnect.persistence.dao.Usuarios.AlumnoDAO;
 import java.util.List;
 import pucp.edu.pe.pucpconnect.domain.Social.Amistad;
 import pucp.edu.pe.pucpconnect.domain.Social.Evento;
+import pucp.edu.pe.pucpconnect.domain.Social.Post;
 
 public class AlumnoServiceImpl implements AlumnoService {
 
@@ -181,5 +182,11 @@ public class AlumnoServiceImpl implements AlumnoService {
     public List<Alumno> obtenerAmigosPorUsuario(int usuarioId) throws SQLException{
         AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
         return dao.obtenerAmigosPorUsuario(usuarioId);
+    }
+    
+    @Override
+    public List<Post> obtenerPostPorUsuario(int usuarioId) throws SQLException{
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        return dao.obtenerPostPorUsuario(usuarioId);
     }
 }

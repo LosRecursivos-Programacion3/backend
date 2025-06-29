@@ -82,7 +82,6 @@ public class PucpConnectPersistence {
 
         // Crear un Post
         Post post = new Post();
-        post.setNombre("Nuevo Post");
         post.setContenido("Este es el contenido del nuevo post.");
         post.setFecha(LocalDateTime.now());
         post.setEstado(true);

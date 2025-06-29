@@ -7,6 +7,7 @@ import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
 import java.util.List;
 import pucp.edu.pe.pucpconnect.domain.Social.Amistad;
 import pucp.edu.pe.pucpconnect.domain.Social.Evento;
+import pucp.edu.pe.pucpconnect.domain.Social.Post;
 
 public interface AlumnoService {
 
@@ -48,5 +49,8 @@ public interface AlumnoService {
     
     public void cancelarSolicitud(int idAmistad) throws Exception;
     
-     public List<Alumno> obtenerAmigosPorUsuario(int usuarioId) throws SQLException;
+    public List<Alumno> obtenerAmigosPorUsuario(int usuarioId) throws SQLException;
+    
+    public List<Post> obtenerPostPorUsuario(int usuarioId) throws SQLException;
+    
 }
