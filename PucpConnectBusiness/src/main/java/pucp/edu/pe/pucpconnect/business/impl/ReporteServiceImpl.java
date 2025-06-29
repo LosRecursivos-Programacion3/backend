@@ -1,33 +1,44 @@
-package pucp.edu.pe.pucpconnect.business.impl;
+package pucp.edu.pe.pucpconnect.business.reportes.impl;
 
-import pucp.edu.pe.pucpconnect.business.ReporteService;
-import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
-import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
-import pucp.edu.pe.pucpconnect.persistence.dao.Usuarios.InteresDAO;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import pucp.edu.pe.pucpconnect.business.reportes.ReporteService;
+import pucp.edu.pe.pucpconnect.persistence.reportes.ReporteDAO;
+import pucp.edu.pe.pucpconnect.persistence.reportes.impl.ReporteDAOImpl;
+import pucp.edu.pe.pucpconnect.util.MySQLConnection;
 
-
-package pucp.edu.pe.pucpconnect.business.impl;
-
-import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.util.JRLoader;
-
-import javax.sql.DataSource;
-import java.io.InputStream;
 import java.sql.Connection;
-import java.util.HashMap;
-import java.util.Map;
 
+public class ReporteServiceImpl implements ReporteService {
 
-@Override
-public byte[] generarReporteEventosParticipantesPDF(Connection conn) throws JRException {
-    InputStream reporte = getClass().getResourceAsStream("/reportes/eventos_participantes.jasper");
-    JasperPrint print = JasperFillManager.fillReport(reporte, null, conn);
-    return JasperExportManager.exportReportToPdf(print);
-}
+    private final ReporteDAO reporteDAO;
 
-@Override
-public byte[] generarReporteAlumnosPorCarreraPDF(Connection conn) throws JRException {
-    InputStream reporte = getClass().getResourceAsStream("/reportes/alumnos_por_carrera.jasper");
-    JasperPrint print = JasperFillManager.fillReport(reporte, null, conn);
-    return JasperExportManager.exportReportToPdf(print);
+    public ReporteServiceImpl() {
+        this.reporteDAO = new ReporteDAOImpl();
+    }
+
+    @Override
+    public byte[] generarReporteEventosParticipantes() {
+        try (Connection conn = MySQLConnection.getConnection()) {
+            JasperPrint print = reporteDAO.generarReporteEventosParticipantes(conn);
+            return JasperExportManager.exportReportToPdf(print);
+        } catch (JRException | RuntimeException e) {
+            throw new RuntimeException("Error al generar el reporte de eventos y participantes", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Error de conexión a base de datos", e);
+        }
+    }
+
+    @Override
+    public byte[] generarReportePorcentajeCarreras() {
+        try (Connection conn = MySQLConnection.getConnection()) {
+            JasperPrint print = reporteDAO.generarReportePorcentajeCarreras(conn);
+            return JasperExportManager.exportReportToPdf(print);
+        } catch (JRException | RuntimeException e) {
+            throw new RuntimeException("Error al generar el reporte de porcentaje por carreras", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Error de conexión a base de datos", e);
+        }
+    }
 }
