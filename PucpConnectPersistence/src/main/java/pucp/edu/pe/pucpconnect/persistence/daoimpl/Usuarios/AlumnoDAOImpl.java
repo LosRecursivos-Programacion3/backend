@@ -282,7 +282,6 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
             ps.executeUpdate();
         }
     }
-    
     @Override
     public List<Amistad> listarSolicitudesEnviadas(int idAlumno) throws SQLException {
         String sql = "SELECT a.idAmistad, a.estado, a.fecha, al1.idAlumno AS idAlumnoUno, u1.nombre AS nombreAlumnoUno, al1.fotoPerfil AS fotoPerfilAlumnoUno, al2.idAlumno AS idAlumnoDos, u2.nombre AS nombreAlumnoDos, al2.fotoPerfil AS fotoPerfilAlumnoDos FROM Amistades a INNER JOIN Alumno al1 ON a.idAlumnoUno = al1.idAlumno INNER JOIN Usuario u1 ON u1.idUsuario = al1.idUsuario INNER JOIN Alumno al2 ON a.idAlumnoDos = al2.idAlumno INNER JOIN Usuario u2 ON u2.idUsuario = al2.idUsuario WHERE a.idAlumnoUno = ? AND a.estado = 0;";

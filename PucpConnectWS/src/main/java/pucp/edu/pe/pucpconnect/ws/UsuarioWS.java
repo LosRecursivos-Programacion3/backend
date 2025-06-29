@@ -225,6 +225,7 @@ public class UsuarioWS {
             throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
         }
     }
+
     @WebMethod(operationName= "listarSolicitudesEnviadas")
     public List<Amistad> listarSolicitudesEnviadas(@WebParam(name = "idAlumno") int idAlumno){
         try{
@@ -273,6 +274,16 @@ public class UsuarioWS {
         try{
             return alumnoService.obtenerAmigosPorUsuario(idUsuario);
         } catch (Exception e) {
+            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+        }
+    }
+    
+    @WebMethod(operationName = "listarAmigos")
+    public List<Alumno> listarAmigos(@WebParam(name = "usuarioId") int usuarioId){
+        try{
+            return usuarioService.listarAmigos(usuarioId);
+        }
+        catch (Exception e) {
             throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
         }
     }
