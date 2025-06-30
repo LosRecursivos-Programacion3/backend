@@ -44,7 +44,7 @@ public class InteresDAOImpl extends BaseDAOImpl<Interes> implements InteresDAO {
 
     @Override
     protected PreparedStatement getSelectByIdPS(Connection conn, Integer id) throws SQLException {
-        String query = "SELECT * FROM Interes WHERE id = ?";
+        String query = "SELECT * FROM Interes WHERE idInteres = ?";
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setInt(1, id);
         return ps;
@@ -59,7 +59,7 @@ public class InteresDAOImpl extends BaseDAOImpl<Interes> implements InteresDAO {
     @Override
     protected Interes createFromResultSet(ResultSet rs) throws SQLException {
         Interes interes = new Interes();
-        interes.setId(rs.getInt("id"));
+        interes.setId(rs.getInt("idInteres"));
         interes.setNombre(rs.getString("nombre"));
         interes.setDescripcion(rs.getString("descripcion"));
         return interes;

@@ -24,7 +24,7 @@ import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImpl;
  *
  * @author Fernando
  */
-@WebService(serviceName = "UsuarioWS")
+@WebService(serviceName = "UsuarioWS", targetNamespace = "http://pucp.edu.pe/pucpconnect")
 public class UsuarioWS {
     private final AlumnoService alumnoService;
     private final UsuarioService usuarioService;
@@ -67,6 +67,15 @@ public class UsuarioWS {
             return usuarioService.autenticarUsuario(email, password);
         } catch (Exception e) {
             throw new WebServiceException("Error al autenticar usuario: " + e.getMessage(), e);
+        }
+    }
+    
+    @WebMethod(operationName = "listarUsuarios")
+    public List<Usuario> listarUsuarios() {
+        try {
+            return usuarioService.listarUsuarios();
+        } catch (Exception e) {
+            throw new WebServiceException("Error al listar eventos: " + e.getMessage(), e);
         }
     }
 }

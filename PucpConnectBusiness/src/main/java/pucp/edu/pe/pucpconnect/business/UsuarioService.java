@@ -18,4 +18,6 @@ public interface UsuarioService {
     List<Usuario> listarMatches(int idUsuario); // Si decides centralizarlo aquí
 
     public void hacerMatch(int idAlumnoUno, int idAlumnoDos) throws SQLException;
+    
+    public List<Usuario>listarUsuarios();
 }

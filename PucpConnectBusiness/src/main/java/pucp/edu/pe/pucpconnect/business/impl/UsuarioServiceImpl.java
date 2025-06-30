@@ -121,4 +121,9 @@ public class UsuarioServiceImpl implements UsuarioService {
             cs.execute();
         }
     }
+    
+    @Override
+    public List<Usuario> listarUsuarios() {
+        return usuarioDAO.listarTodos();
+    }
 }

@@ -17,6 +17,7 @@ import java.util.List;
  * @author USUARIO
  */
 public class NotificacionDAOImpl extends BaseDAOImpl<Notificacion> implements NotificacionDAO {
+    
     @Override
     protected PreparedStatement getInsertPS(Connection conn, Notificacion n) throws SQLException {
         String sql = "INSERT INTO Notificacion "

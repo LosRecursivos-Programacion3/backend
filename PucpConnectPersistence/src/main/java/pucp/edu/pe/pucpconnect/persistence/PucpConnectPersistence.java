@@ -5,12 +5,15 @@
 package pucp.edu.pe.pucpconnect.persistence;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import pucp.edu.pe.pucpconnect.domain.Social.Evento;
 import pucp.edu.pe.pucpconnect.domain.Social.Post;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Usuario;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Interacciones.ComentarioDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Interacciones.ReaccionDAOImpl;
+import pucp.edu.pe.pucpconnect.persistence.daoimpl.Social.EventoDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Social.PostDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImpl;
 
@@ -23,6 +26,29 @@ public class PucpConnectPersistence {
     public static void main(String[] args) {
         System.out.println("Hello World!");
         // Crear DAOs
+        EventoDAOImpl eventoDAOImpl = new EventoDAOImpl();
+        Evento evento = new Evento();
+        Alumno creador = new Alumno();
+        creador.setId(1);
+        evento.setCreador(creador);
+        evento.setNombre("Taller de Python");
+        evento.setDescripcion("Taller donde los alumnos experimentan la plataforma de Python");
+          String fechaString = "2025-08-10 10:00:00";
+        
+        // Definir el formateador con el patrón correcto
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        
+        // Convertir String a LocalDateTime
+        LocalDateTime fecha = LocalDateTime.parse(fechaString, formatter);
+        
+        evento.setFecha(fecha);
+        evento.setUbicacion("V205");
+        evento.setEstado(true);
+        evento.setIdEvento(4);
+        eventoDAOImpl.agregar(evento);
+        
+        
+        
         UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
         PostDAOImpl postDAO = new PostDAOImpl();
         ComentarioDAOImpl comentarioDAO = new ComentarioDAOImpl();
