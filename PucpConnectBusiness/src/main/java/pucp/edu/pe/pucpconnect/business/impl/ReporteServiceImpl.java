@@ -1,26 +1,28 @@
-package pucp.edu.pe.pucpconnect.business.reportes.impl;
+package pucp.edu.pe.pucpconnect.business.impl;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import pucp.edu.pe.pucpconnect.business.reportes.ReporteService;
-import pucp.edu.pe.pucpconnect.persistence.reportes.ReporteDAO;
-import pucp.edu.pe.pucpconnect.persistence.reportes.impl.ReporteDAOImpl;
-import pucp.edu.pe.pucpconnect.util.MySQLConnection;
+import pucp.edu.pe.pucpconnect.business.ReporteService;
+import pucp.edu.pe.pucpconnect.persistence.dao.reportes.ReportesDAO;
+import pucp.edu.pe.pucpconnect.persistence.daoimpl.Reportes.ReportesDAOImpl;
+
+import java.sql.*;
 
 import java.sql.Connection;
+import pucp.edu.pe.pucpconnect.persistence.DBManager;
 
 public class ReporteServiceImpl implements ReporteService {
 
-    private final ReporteDAO reporteDAO;
+    private final ReportesDAO reporteDAO;
 
     public ReporteServiceImpl() {
-        this.reporteDAO = new ReporteDAOImpl();
+        this.reporteDAO = new ReportesDAOImpl();
     }
 
     @Override
     public byte[] generarReporteEventosParticipantes() {
-        try (Connection conn = MySQLConnection.getConnection()) {
+        try (Connection conn = DBManager.getInstance().obtenerConexion()) {
             JasperPrint print = reporteDAO.generarReporteEventosParticipantes(conn);
             return JasperExportManager.exportReportToPdf(print);
         } catch (JRException | RuntimeException e) {
@@ -32,7 +34,7 @@ public class ReporteServiceImpl implements ReporteService {
 
     @Override
     public byte[] generarReportePorcentajeCarreras() {
-        try (Connection conn = MySQLConnection.getConnection()) {
+        try (Connection conn = DBManager.getInstance().obtenerConexion()) {
             JasperPrint print = reporteDAO.generarReportePorcentajeCarreras(conn);
             return JasperExportManager.exportReportToPdf(print);
         } catch (JRException | RuntimeException e) {

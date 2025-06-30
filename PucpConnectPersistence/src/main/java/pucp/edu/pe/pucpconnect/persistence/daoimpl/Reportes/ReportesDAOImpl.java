@@ -1,12 +1,12 @@
-package pucp.edu.pe.pucpconnect.persistence.reportes.impl;
+package pucp.edu.pe.pucpconnect.persistence.daoimpl.Reportes;
 
 import net.sf.jasperreports.engine.*;
-import pucp.edu.pe.pucpconnect.persistence.reportes.ReporteDAO;
+import pucp.edu.pe.pucpconnect.persistence.dao.reportes.ReportesDAO;
 
 import java.io.InputStream;
 import java.sql.Connection;
 
-public class ReporteDAOImpl implements ReporteDAO {
+public class ReportesDAOImpl implements ReportesDAO {
 
     @Override
     public JasperPrint generarReporteEventosParticipantes(Connection conn) throws JRException {
