@@ -4,6 +4,9 @@
  */
 package pucp.edu.pe.pucpconnect.business;
 
+import java.util.List;
+import pucp.edu.pe.pucpconnect.domain.Social.Post;
+import pucp.edu.pe.pucpconnect.domain.Social.PostConAutor;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 
 /**
@@ -12,4 +15,5 @@ import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
  */
 public interface PostService {
     public void crearPost(String descripcion, String imagen, Alumno alumno) throws Exception;
+    public List<PostConAutor> listarPostParaMain(int idAlumno) throws Exception;
 }

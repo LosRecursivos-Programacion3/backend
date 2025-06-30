@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImplTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.287 s -- in pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImplTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.371 s -- in pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImplTest

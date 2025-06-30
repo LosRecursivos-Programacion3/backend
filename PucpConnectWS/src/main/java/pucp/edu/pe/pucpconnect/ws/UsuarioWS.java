@@ -21,10 +21,12 @@ import pucp.edu.pe.pucpconnect.business.impl.PostServiceImpl;
 import pucp.edu.pe.pucpconnect.business.impl.UsuarioServiceImpl;
 import pucp.edu.pe.pucpconnect.domain.Social.Amistad;
 import pucp.edu.pe.pucpconnect.domain.Social.Post;
+import pucp.edu.pe.pucpconnect.domain.Social.PostConAutor;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Usuario;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
+import pucp.edu.pe.pucpconnect.persistence.dao.Social.PostDAO;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Social.PostDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.InteresDAOImpl;
@@ -51,7 +53,7 @@ public class UsuarioWS {
         BaseDAO<Interes> interesDAO = new InteresDAOImpl();
         interesService = new InteresServiceImpl(interesDAO);
         
-        BaseDAO<Post> postDAO = new PostDAOImpl();
+        PostDAO postDAO = new PostDAOImpl();
         postService = new PostServiceImpl(postDAO);
     }
     
@@ -292,7 +294,6 @@ public class UsuarioWS {
                 archivo = null;
             }
             Alumno alumno = alumnoService.buscarPorId(idUsuario);
-            System.out.println("Alumno recibido: " + alumno.getIdAlumno() + alumno.getNombre());
             postService.crearPost(contenido, archivo, alumno);
             
         } catch (Exception e) {
@@ -308,4 +309,14 @@ public class UsuarioWS {
             throw new WebServiceException("Error al listar amigos: " + e.getMessage(), e);
         }
     }
+    
+    @WebMethod(operationName = "listarPostParaMain")
+    public List<PostConAutor> listarPostParaMain(@WebParam(name = "idUsuario") int idAlumno){
+        try{
+            return postService.listarPostParaMain(idAlumno);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al listar posts: " + e.getMessage(), e);
+        }
+    }
+    
 }
