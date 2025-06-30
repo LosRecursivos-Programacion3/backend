@@ -11,11 +11,14 @@ import java.util.List;
 import pucp.edu.pe.pucpconnect.domain.Social.Amistad;
 import pucp.edu.pe.pucpconnect.domain.Social.Evento;
 import pucp.edu.pe.pucpconnect.domain.Social.Post;
+import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImpl;
 
 public class AlumnoServiceImpl implements AlumnoService {
 
     private final BaseDAO<Alumno> alumnoDAO;
-
+    public AlumnoServiceImpl() {
+        this.alumnoDAO = new AlumnoDAOImpl();
+    }
     public AlumnoServiceImpl(BaseDAO<Alumno> alumnoDAO) {
         this.alumnoDAO = alumnoDAO;
     }

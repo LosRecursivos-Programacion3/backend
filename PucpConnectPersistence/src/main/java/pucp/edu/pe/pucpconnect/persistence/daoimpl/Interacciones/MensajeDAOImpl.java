@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import pucp.edu.pe.pucpconnect.domain.Interacciones.Mensaje;
+import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.DBManager;
 import pucp.edu.pe.pucpconnect.persistence.dao.Interacciones.MensajeDAO;
@@ -28,14 +29,18 @@ public class MensajeDAOImpl extends BaseDAOImpl<Mensaje> implements MensajeDAO {
     
     @Override
     protected PreparedStatement getInsertPS(Connection conn, Mensaje mensaje) throws SQLException {
-        String query = "{CALL sp_registrar_mensaje(?, ?, ?, ?, ?)}"; // Procedimiento almacenado para insertar mensaje
-        CallableStatement cs = conn.prepareCall(query);
-        cs.setInt(1, mensaje.getEmisor().getId());
-        cs.setInt(2, mensaje.getReceptor().getId());
-        cs.setString(3, mensaje.getContenido());
-        cs.setTimestamp(4, Timestamp.valueOf(mensaje.getFechaEnvio())); // Fecha de envío
-        cs.registerOutParameter(5, Types.INTEGER); // Para obtener el ID generado
-        return cs;
+        // Insert directo, sin SP
+        String sql = "INSERT INTO Mensaje "
+                   + "(emisor_id, receptor_id, contenido, fechaEnvio, estado) "
+                   + "VALUES (?, ?, ?, ?, ?)";
+        // Indica que queremos recuperar la clave generada por AUTO_INCREMENT
+        PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        ps.setInt      (1, mensaje.getEmisor().getId());
+        ps.setInt      (2, mensaje.getReceptor().getId());
+        ps.setString   (3, mensaje.getContenido());
+        ps.setTimestamp(4, Timestamp.valueOf(mensaje.getFechaEnvio()));
+        ps.setBoolean  (5, mensaje.isEstado());
+        return ps;
     }
 
     @Override
@@ -91,19 +96,40 @@ public class MensajeDAOImpl extends BaseDAOImpl<Mensaje> implements MensajeDAO {
     
     // Función adicional para obtener mensajes entre dos usuarios utilizando procedimiento almacenado
     public List<Mensaje> obtenerMensajesEntreUsuarios(int emisorId, int receptorId) {
-        List<Mensaje> mensajes = new ArrayList<>();
-        try (Connection conn = DBManager.getInstance().obtenerConexion()) {
-            String query = "{CALL sp_obtener_mensajes_entre_usuarios(?, ?)}"; // Procedimiento almacenado para obtener mensajes entre usuarios
-            CallableStatement cs = conn.prepareCall(query);
-            cs.setInt(1, emisorId);
-            cs.setInt(2, receptorId);
-            ResultSet rs = cs.executeQuery();
+    String sql = "SELECT m.idMensaje, m.contenido, m.fechaEnvio, m.estado, " +
+                 "       m.emisor_id, m.receptor_id " +
+                 "FROM Mensaje m " +
+                 "WHERE (m.emisor_id = ? AND m.receptor_id = ?) " +
+                 "   OR (m.emisor_id = ? AND m.receptor_id = ?) " +
+                 "ORDER BY m.fechaEnvio ASC";
+
+    List<Mensaje> lista = new ArrayList<>();
+    try (Connection conn = DBManager.getInstance().obtenerConexion();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setInt(1, emisorId);
+        ps.setInt(2, receptorId);
+        ps.setInt(3, receptorId);
+        ps.setInt(4, emisorId);
+
+        try (ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                mensajes.add(createFromResultSet(rs));
+                Mensaje m = new Mensaje();
+                m.setIdMensaje(rs.getInt("idMensaje"));
+                m.setContenido(rs.getString("contenido"));
+                m.setFechaEnvio(rs.getTimestamp("fechaEnvio").toLocalDateTime());
+                m.setEstado(rs.getBoolean("estado"));
+                // Asume que tienes métodos para cargar sólo el ID de emisor/receptor
+                Alumno em = new Alumno(); em.setIdAlumno(rs.getInt("emisor_id"));
+                Alumno rec = new Alumno(); rec.setIdAlumno(rs.getInt("receptor_id"));
+                m.setEmisor(em);
+                m.setReceptor(rec);
+                lista.add(m);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error al obtener mensajes entre usuarios", e);
         }
-        return mensajes;
+    } catch (SQLException e) {
+        throw new RuntimeException("Error al obtener mensajes entre usuarios", e);
+    }
+    return lista;
     }
 }

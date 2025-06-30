@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Usuario;
 
 import java.util.List;
+import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 
 public interface UsuarioService {
 
@@ -18,4 +19,6 @@ public interface UsuarioService {
     List<Usuario> listarMatches(int idUsuario); // Si decides centralizarlo aquí
 
     public void hacerMatch(int idAlumnoUno, int idAlumnoDos) throws SQLException;
+    
+    List<Alumno> listarAmigos(int usuarioId) throws Exception;
 }

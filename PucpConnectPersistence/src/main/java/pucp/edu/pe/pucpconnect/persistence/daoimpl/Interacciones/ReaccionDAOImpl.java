@@ -14,7 +14,6 @@ import pucp.edu.pe.pucpconnect.persistence.dao.Interacciones.ReaccionDAO;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Social.EventoDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Social.PostDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImpl;
-
 /**
  *
  * @author irico17

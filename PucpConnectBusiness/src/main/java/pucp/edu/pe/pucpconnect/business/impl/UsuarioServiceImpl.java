@@ -12,15 +12,23 @@ import java.util.ArrayList;
 import java.util.List;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.persistence.DBManager;
+import pucp.edu.pe.pucpconnect.persistence.dao.Usuarios.AlumnoDAO;
+import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImpl;
 
 public class UsuarioServiceImpl implements UsuarioService {
 
     private BaseDAO<Usuario> usuarioDAO;
-
+    private final AlumnoDAO alumnoDAO = new AlumnoDAOImpl();
     public UsuarioServiceImpl(BaseDAO<Usuario> usuarioDAO) {
         this.usuarioDAO = usuarioDAO;
     }
-
+    
+    @Override
+    public List<Alumno> listarAmigos(int usuarioId) throws Exception {
+        // Simplemente delegas al DAO de alumnos
+        return alumnoDAO.obtenerAmigosPorUsuario(usuarioId);
+    }
+    
     @Override
     public Usuario autenticarUsuario(String correo, String password) throws Exception {
         List<Usuario> usuarios = usuarioDAO.listarTodos();
