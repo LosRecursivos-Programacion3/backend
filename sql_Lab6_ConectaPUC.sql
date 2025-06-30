@@ -188,3 +188,16 @@ CREATE TABLE Alumnos_bloqueados (
     FOREIGN KEY (id_Alumno) REFERENCES Alumno(idAlumno),
     FOREIGN KEY (id_Alumno_bloqueado) REFERENCES Alumno(idAlumno)
 );
+
+DROP TABLE IF EXISTS Amistades;
+CREATE TABLE Amistades (
+    idAmistad INT AUTO_INCREMENT PRIMARY KEY,
+    idAlumnoUno INT NOT NULL,
+    idAlumnoDos INT NOT NULL,
+    estado TINYINT(1) NOT NULL, -- 0: pendiente, 1: aceptada, 2: rechazada
+    fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Relaciones foráneas
+    CONSTRAINT fk_amistad_alumno_uno FOREIGN KEY (idAlumnoUno) REFERENCES Alumno(idAlumno),
+    CONSTRAINT fk_amistad_alumno_dos FOREIGN KEY (idAlumnoDos) REFERENCES Alumno(idAlumno)
+);

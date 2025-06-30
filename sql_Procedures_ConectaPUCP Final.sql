@@ -832,3 +832,54 @@ BEGIN
 END;
 //
 DELIMITER ;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_sugerir_amigos$$
+CREATE PROCEDURE sp_sugerir_amigos(
+    IN lista_intereses TEXT,
+    IN idAlumnoBuscador INT
+)
+BEGIN
+    -- Crear tabla temporal para guardar los IDs de intereses separados
+    CREATE TEMPORARY TABLE IF NOT EXISTS tmp_intereses (
+        id INT
+    );
+
+    -- Truncar en lugar de borrar para evitar error por modo seguro
+    TRUNCATE TABLE tmp_intereses;
+
+    -- Insertar los intereses separados
+    INSERT INTO tmp_intereses (id)
+    SELECT CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(lista_intereses, ',', n), ',', -1) AS UNSIGNED)
+    FROM (
+        SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+    ) numbers
+    WHERE n <= 1 + LENGTH(lista_intereses) - LENGTH(REPLACE(lista_intereses, ',', ''));
+
+    -- Sugerir alumnos ordenados por coincidencias (incluye los de 0 coincidencias)
+    SELECT 
+        a.*, 
+        u.nombre AS nombre,
+        COUNT(ai.idInteres) AS intereses_en_comun
+    FROM Alumno a
+    INNER JOIN Usuario u ON a.idUsuario = u.idUsuario
+    LEFT JOIN Alumno_Interes ai ON a.idAlumno = ai.idUsuario
+                               AND ai.idInteres IN (SELECT id FROM tmp_intereses)
+    WHERE a.idAlumno <> idAlumnoBuscador
+      AND NOT EXISTS (
+			SELECT 1
+			FROM Amistades am
+			WHERE (
+				(am.idAlumnoUno = idAlumnoBuscador AND am.idAlumnoDos = a.idAlumno) OR
+				(am.idAlumnoDos = idAlumnoBuscador AND am.idAlumnoUno = a.idAlumno)
+			)
+			AND am.estado <> 2
+		)
+    GROUP BY a.idAlumno
+    ORDER BY intereses_en_comun DESC;
+
+    -- Eliminar tabla temporal
+    DROP TEMPORARY TABLE IF EXISTS tmp_intereses;
+END$$
+DELIMITER ;
+
