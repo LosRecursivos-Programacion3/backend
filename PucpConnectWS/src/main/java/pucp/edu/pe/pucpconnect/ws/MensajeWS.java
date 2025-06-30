@@ -16,11 +16,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImpl;
 
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
 @WebService(serviceName = "MensajeWS")
 public class MensajeWS {
 
     private final MensajeService mensajeService;
-
+    private final DateTimeFormatter ISO = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     public MensajeWS() {
         // Aquí inicializas el servicio para los mensajes
         mensajeService = new MensajeServiceImpl();
@@ -48,12 +51,24 @@ public class MensajeWS {
     }
 
     @WebMethod(operationName = "obtenerMensajesEntreUsuarios")
-    public List<Mensaje> obtenerMensajesEntreUsuarios(
+    public List<MensajeDTO> obtenerMensajesEntreUsuarios(
         @WebParam(name = "emisorId") int emisorId,
         @WebParam(name = "receptorId") int receptorId
     ) {
         try {
-            return mensajeService.obtenerMensajesEntreUsuarios(emisorId, receptorId);
+            List<Mensaje> domainList =
+            mensajeService.obtenerMensajesEntreUsuarios(emisorId, receptorId);
+
+            List<MensajeDTO> dtos = new ArrayList<>();
+            for (Mensaje m : domainList) {
+                MensajeDTO dto = new MensajeDTO();
+                dto.setEmisorId(   m.getEmisor().getIdAlumno() );
+                dto.setReceptorId( m.getReceptor().getIdAlumno() );
+                dto.setContenido(  m.getContenido() );                       // ← aquí
+                dto.setTimestamp(  m.getFechaEnvio().format(ISO) );          // ISO string
+                dtos.add(dto);
+            }
+            return dtos;
         } catch (Exception e) {
             throw new WebServiceException("Error al obtener mensajes entre usuarios: " + e.getMessage(), e);
         }

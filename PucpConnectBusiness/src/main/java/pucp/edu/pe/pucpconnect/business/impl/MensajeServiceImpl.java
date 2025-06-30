@@ -6,6 +6,7 @@ package pucp.edu.pe.pucpconnect.business.impl;
 
 import pucp.edu.pe.pucpconnect.business.MensajeService;
 import pucp.edu.pe.pucpconnect.domain.Interacciones.Mensaje;
+import pucp.edu.pe.pucpconnect.persistence.dao.Interacciones.MensajeDAO;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Interacciones.MensajeDAOImpl;
 
 import java.util.List;
