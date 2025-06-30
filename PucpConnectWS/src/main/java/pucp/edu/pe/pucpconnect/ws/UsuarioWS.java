@@ -235,6 +235,7 @@ public class UsuarioWS {
             throw new WebServiceException("Error al enviar solicitud amistad: " + e.getMessage(), e);
         }
     }
+
     @WebMethod(operationName= "listarSolicitudesEnviadas")
     public List<Amistad> listarSolicitudesEnviadas(@WebParam(name = "idAlumno") int idAlumno){
         try{
@@ -286,7 +287,7 @@ public class UsuarioWS {
             throw new WebServiceException("Error al listar amigos: " + e.getMessage(), e);
         }
     }
-    
+
     @WebMethod(operationName= "crearPost")
     public void crearPost(@WebParam(name = "contenido") String contenido, @WebParam(name = "archivo") String archivo, @WebParam(name = "idUsuario") int idUsuario){
         try{
@@ -319,4 +320,13 @@ public class UsuarioWS {
         }
     }
     
+    @WebMethod(operationName = "listarAmigos")
+    public List<Alumno> listarAmigos(@WebParam(name = "usuarioId") int usuarioId){
+        try{
+            return usuarioService.listarAmigos(usuarioId);
+        }
+        catch (Exception e) {
+            throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
+        }
+    }
 }
