@@ -434,6 +434,108 @@ public class AlumnoDAOImpl extends BaseDAOImpl<Alumno> implements AlumnoDAO {
         }
         return posts;
     }
+    
+    @Override
+    public List<Alumno> listarAmigosSugeridos_Match(List<Interes> intereses, int idAlumnoBuscador) throws SQLException {
+        List<Alumno> sugeridos = new ArrayList<>();
+
+        // Convertir lista de intereses a CSV
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < intereses.size(); i++) {
+            sb.append(intereses.get(i).getId());
+            if (i < intereses.size() - 1) sb.append(",");
+        }
+        String interesesCsv = sb.toString();
+
+        String sql = "{CALL sp_sugerir_amigos_para_match(?, ?)}";
+
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            cs.setString(1, interesesCsv);
+            cs.setInt(2, idAlumnoBuscador);
+
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    Alumno a = new Alumno();
+                    a.setIdAlumno(rs.getInt("idAlumno"));
+                    a.setEdad(rs.getInt("edad"));
+                    a.setCarrera(rs.getString("carrera"));
+                    a.setFotoPerfil(rs.getString("fotoPerfil"));
+                    a.setUbicacion(rs.getString("ubicacion"));
+                    a.setBiografia(rs.getString("biografia"));
+                    a.setId(rs.getInt("idUsuario"));
+                    a.setNombre(rs.getString("nombre"));
+                    sugeridos.add(a);
+                }
+            }
+        }
+        return sugeridos;
+    }
+    
+    @Override
+    public int existeInteraccion(int idAlumnoDos, int idAlumnoUno) throws SQLException {
+        String sql = "SELECT 1 FROM Interaccion WHERE " +
+                     "(alumnoUno_id = ? AND alumnoDos_id = ?) " +
+                     "OR (alumnoUno_id = ? AND alumnoDos_id = ?) " +
+                     "LIMIT 1";
+
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idAlumnoUno);  // Primer orden
+            ps.setInt(2, idAlumnoDos);
+            ps.setInt(3, idAlumnoDos);  // Segundo orden
+            ps.setInt(4, idAlumnoUno);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("idInteraccion");
+                } else {
+                    return -1;
+                }
+            }
+        }
+    }
+    
+    @Override
+    public void aceptarInteraccion(int idInteraccion) throws SQLException {
+        String sql = "UPDATE Interaccion SET estado = 1 WHERE idInteraccion = ?";
+
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idInteraccion);
+            ps.executeUpdate();
+        }
+    }
+    
+    @Override
+    public void agregarInteraccion(int idAlumnoDos, int idAlumnoUno) throws SQLException {
+        String sql = "INSERT INTO Interaccion (alumnoUno_id, alumnoDos_id, estado, tipo, fecha) " +
+                 "VALUES (?, ?, 0, 'M', CURDATE())";
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idAlumnoUno);
+            ps.setInt(2, idAlumnoDos);
+            ps.executeUpdate();
+        }
+    }
+    
+    @Override
+    public void agregarAmistad(int idAlumnoUno, int idAlumnoDos) throws Exception{
+        String sql = "INSERT INTO Amistades (idAlumnoUno, idAlumnoDos, estado, fecha) " +
+                 "VALUES (?, ?, 1, CURDATE())";
+
+        try (Connection conn = DBManager.getInstance().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idAlumnoUno);
+            ps.setInt(2, idAlumnoDos);
+            ps.executeUpdate();
+        }
+    }
 }
 
 

@@ -53,4 +53,13 @@ public interface AlumnoService {
     
     public List<Post> obtenerPostPorUsuario(int usuarioId) throws SQLException;
     
+    public List<Alumno> listarAlumnosSugeridos_Match(List<Interes> intereses, int idAlumno) throws Exception;
+    
+    public int existeInteraccion(int idAlumnoDos, int idAlumnoUno) throws Exception;
+    
+    public void aceptarInteraccion(int idInteraccion) throws Exception;
+    
+    public void agregarInteraccion(int idAlumnoDos, int idAlumnoUno) throws Exception;
+    
+    public void agregarAmistad(int idAlumnoUno, int idAlumnoDos) throws Exception;
 }

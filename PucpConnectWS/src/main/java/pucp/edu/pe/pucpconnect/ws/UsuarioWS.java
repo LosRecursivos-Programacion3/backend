@@ -329,4 +329,50 @@ public class UsuarioWS {
             throw new WebServiceException("Error al hacer match: " + e.getMessage(), e);
         }
     }
+    
+    @WebMethod(operationName= "listarSugeridos_Para_Match")
+    public List<Alumno> listarSugeridos_Para_Match(@WebParam(name = "idAlumno") int idAlumno){
+        try{
+            List<Interes> intereses = interesService.obtenerInteresesUsuario(idAlumno);
+            List<Alumno> alumnosSugeridos = alumnoService.listarAlumnosSugeridos_Match(intereses, idAlumno);
+            return alumnosSugeridos;
+        } catch (Exception e) {
+            throw new WebServiceException("Error al listar sugeridos: " + e.getMessage(), e);
+        }
+    }
+    
+    @WebMethod(operationName= "existeInteraccion")
+    public int existeInteraccion(@WebParam(name = "idDos") int idAlumnoDos, @WebParam(name = "idUno") int idAlumnoUno){
+        try{
+            return alumnoService.existeInteraccion(idAlumnoDos, idAlumnoUno);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al verificar existencia de interacción: " + e.getMessage(), e);
+        }
+    }
+    @WebMethod(operationName= "confirmarMatch")
+    public void confirmarMatch(@WebParam(name = "idInteraccion") int idInteraccion){
+        try{
+            alumnoService.aceptarInteraccion(idInteraccion);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al confirmar match: " + e.getMessage(), e);
+        }
+    }
+    
+    @WebMethod(operationName="crearInteraccion")
+    public void crearInteraccion(@WebParam(name = "idAlumnoDos") int idAlumnoDos, @WebParam(name = "idAlumnoUno") int idAlumnoUno){
+        try{
+            alumnoService.agregarInteraccion(idAlumnoDos, idAlumnoUno);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al confirmar match: " + e.getMessage(), e);
+        }
+    } 
+    
+    @WebMethod(operationName="agregarAmistad")
+    public void agregarAmistad(@WebParam(name = "idAlumnoDos") int idAlumnoUno, @WebParam(name = "idAlumnoUno") int idAlumnoDos){
+        try{
+            alumnoService.agregarAmistad(idAlumnoUno, idAlumnoDos);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al agregar amistad: " + e.getMessage(), e);
+        }
+    }
 }

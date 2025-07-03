@@ -192,4 +192,34 @@ public class AlumnoServiceImpl implements AlumnoService {
         AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
         return dao.obtenerPostPorUsuario(usuarioId);
     }
+    
+    @Override
+    public List<Alumno> listarAlumnosSugeridos_Match(List<Interes> intereses, int idAlumno) throws Exception{
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        return dao.listarAmigosSugeridos_Match(intereses, idAlumno);
+    }
+    
+    @Override
+    public int existeInteraccion(int idAlumnoDos, int idAlumnoUno) throws Exception{
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        return dao.existeInteraccion(idAlumnoDos, idAlumnoUno);
+    }
+    
+    @Override
+    public void aceptarInteraccion(int idInteraccion) throws Exception{
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        dao.aceptarInteraccion(idInteraccion);
+    }
+    
+    @Override
+    public void agregarInteraccion(int idAlumnoDos, int idAlumnoUno) throws Exception{
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        dao.agregarInteraccion(idAlumnoDos, idAlumnoUno);
+    }
+    
+    @Override
+    public void agregarAmistad(int idAlumnoUno, int idAlumnoDos) throws Exception {
+        AlumnoDAO dao = (AlumnoDAO) alumnoDAO;
+        dao.agregarAmistad(idAlumnoUno, idAlumnoDos);
+    }
 }

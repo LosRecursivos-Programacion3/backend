@@ -30,4 +30,9 @@ public interface AlumnoDAO extends BaseDAO<Alumno> {
     public void actualizarEstadoAmistad(int idAmistad, int nuevoEstado) throws SQLException;
     public List<Alumno> obtenerAmigosPorUsuario(int usuarioId) throws SQLException;
     public List<Post> obtenerPostPorUsuario(int usuarioId) throws SQLException;
+    public List<Alumno> listarAmigosSugeridos_Match(List<Interes> intereses, int idAlumnoBuscador) throws SQLException;
+    public int existeInteraccion(int idAlumnoDos, int idAlumnoUno) throws SQLException;
+    public void aceptarInteraccion(int idInteraccion) throws SQLException;
+    public void agregarInteraccion(int idAlumnoDos, int idAlumnoUno) throws SQLException;
+    public void agregarAmistad(int idAlumnoUno, int idAlumnoDos) throws Exception;
 }

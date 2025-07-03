@@ -148,9 +148,6 @@ public class EventoWS {
     public List<Evento> listarEventos() {
         try {
             List<Evento> eventos = eventSer.listarEventos();
-
-            
-
             return eventos;
         } catch (Exception e) {
             throw new WebServiceException("Error al listar eventos: " + e.getMessage(), e);
