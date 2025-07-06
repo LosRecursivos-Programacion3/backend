@@ -1,5 +1,8 @@
 package pucp.edu.pe.pucpconnect.business.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -10,6 +13,13 @@ import pucp.edu.pe.pucpconnect.persistence.daoimpl.Reportes.ReportesDAOImpl;
 import java.sql.*;
 
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperReport;
 import pucp.edu.pe.pucpconnect.persistence.DBManager;
 
 public class ReporteServiceImpl implements ReporteService {
@@ -19,28 +29,27 @@ public class ReporteServiceImpl implements ReporteService {
     public ReporteServiceImpl() {
         this.reporteDAO = new ReportesDAOImpl();
     }
+    
+        @Override
+        public byte[] generaReporte(String template_path) throws JRException{
+            byte[] file;
 
-    @Override
-    public byte[] generarReporteEventosParticipantes() {
-        try (Connection conn = DBManager.getInstance().obtenerConexion()) {
-            JasperPrint print = reporteDAO.generarReporteEventosParticipantes(conn);
-            return JasperExportManager.exportReportToPdf(print);
-        } catch (JRException | RuntimeException e) {
-            throw new RuntimeException("Error al generar el reporte de eventos y participantes", e);
-        } catch (Exception e) {
-            throw new RuntimeException("Error de conexión a base de datos", e);
-        }
-    }
+        // Compilación del archivo jrxml de Jasper Reports
+        JasperReport report;
+        report = JasperCompileManager.compileReport(template_path);
+        // Obtener conexión a la base de datos
+        Connection conn = DBManager.getInstance().obtenerConexion();
+        HashMap<String, Object> parameters = new HashMap<>();
+        JasperPrint print = JasperFillManager.fillReport(report, parameters, conn);
+        file = JasperExportManager.exportReportToPdf(print);
 
-    @Override
-    public byte[] generarReportePorcentajeCarreras() {
-        try (Connection conn = DBManager.getInstance().obtenerConexion()) {
-            JasperPrint print = reporteDAO.generarReportePorcentajeCarreras(conn);
-            return JasperExportManager.exportReportToPdf(print);
-        } catch (JRException | RuntimeException e) {
-            throw new RuntimeException("Error al generar el reporte de porcentaje por carreras", e);
-        } catch (Exception e) {
-            throw new RuntimeException("Error de conexión a base de datos", e);
-        }
-    }
+        return file;
+      }
+
+  
+  private String getFileResource(String fileName){ 
+        String filePath = getClass().getClassLoader().getResource(fileName).getPath();
+        filePath = filePath.replace("%20", " ");
+        return filePath;
+    } 
 }
