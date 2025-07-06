@@ -1,8 +1,9 @@
 package pucp.edu.pe.pucpconnect.business;
 
-import java.util.List;
+import net.sf.jasperreports.engine.JRException;
 
 public interface ReporteService {
-    byte[] generarReporteEventosParticipantes();
-    byte[] generarReportePorcentajeCarreras();
+    public byte[] generaReporte(String template_path) throws JRException;
+    
+    
 }
