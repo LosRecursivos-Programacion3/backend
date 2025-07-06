@@ -3,11 +3,16 @@ package pucp.edu.pe.pucpconnect.ws;
 import jakarta.jws.WebMethod;
 import jakarta.jws.WebParam;
 import jakarta.jws.WebService;
-import jakarta.xml.ws.WebServiceException;
+
+
+import java.io.FileNotFoundException;
+
+
+
 import pucp.edu.pe.pucpconnect.business.ReporteService;
+
 import pucp.edu.pe.pucpconnect.business.impl.ReporteServiceImpl;
-import pucp.edu.pe.pucpconnect.persistence.dao.reportes.ReportesDAO;
-import pucp.edu.pe.pucpconnect.persistence.daoimpl.Reportes.ReportesDAOImpl;
+
 
 /**
  * Web service para exponer reportes Jasper al frontend.
@@ -18,31 +23,63 @@ public class ReporteWS {
     private final ReporteService reporteService;
 
     public ReporteWS() {
-        ReportesDAO reporteDAO = new ReportesDAOImpl();
         reporteService = new ReporteServiceImpl();
     }
 
     /**
      * Genera el reporte de eventos con sus participantes.
      */
-    @WebMethod(operationName = "generarReporteEventosConParticipantes")
-    public byte[] generarReporteEventosConParticipantes() {
-        try {
-            return reporteService.generarReporteEventosParticipantes();
-        } catch (Exception e) {
-            throw new WebServiceException("Error generando reporte de eventos: " + e.getMessage(), e);
-        }
-    }
-
     /**
      * Genera el reporte de porcentaje de alumnos por carrera.
      */
-    @WebMethod(operationName = "generarReportePorcentajeAlumnosPorCarrera")
-    public byte[] generarReportePorcentajeAlumnosPorCarrera() {
+    @WebMethod(operationName = "generarReporteEventosConParticipantes")
+    public byte[] generarReporteEventosConParticipantes() throws FileNotFoundException {
+        byte[] file = null;
+
+        String template_path = ReporteWS.class.getResource("/eventos_participantes.jrxml").getPath();
+        template_path = template_path.replace("%20", " ");
+
         try {
-            return reporteService.generarReportePorcentajeCarreras();
-        } catch (Exception e) {
-            throw new WebServiceException("Error generando reporte de alumnos por carrera: " + e.getMessage(), e);
+            file = reporteService.generaReporte(template_path);
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
         }
+
+        return file;
     }
+
+    @WebMethod(operationName = "ReporteCantAlumnosPorCarrera")
+    public byte[] ReporteCantAlumnosPorCarrera() throws FileNotFoundException {
+        byte[] file = null;
+
+        String template_path = ReporteWS.class.getResource("/porcentaje_carreras.jrxml").getPath();
+        template_path = template_path.replace("%20", " ");
+
+        try {
+            file = reporteService.generaReporte(template_path);
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
+
+        return file;
+    }
+
+    @WebMethod(operationName = "ReporteUsuarios")
+    public byte[] ReporteUsuarios() throws FileNotFoundException {
+        byte[] file = null;
+
+        String template_path = ReporteWS.class.getResource("/usuarios_intereses.jrxml").getPath();
+        template_path = template_path.replace("%20", " ");
+
+        try {
+            file = reporteService.generaReporte(template_path);
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
+
+        return file;
+    }
+
+    
+
 }
