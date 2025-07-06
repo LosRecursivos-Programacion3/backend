@@ -4,6 +4,9 @@ import jakarta.jws.WebService;
 import jakarta.jws.WebMethod;
 import jakarta.jws.WebParam;
 import jakarta.xml.ws.WebServiceException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import java.time.LocalDateTime;
@@ -11,7 +14,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -24,6 +29,7 @@ import pucp.edu.pe.pucpconnect.domain.Social.Evento;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
 import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
 import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
+import pucp.edu.pe.pucpconnect.persistence.DBManager;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Social.EventoDAOImpl;
 import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImpl;
 
@@ -302,4 +308,9 @@ public class EventoWS {
         }
         return "No se actualizaron";
     }
+    
+    
+    
+    
+    
 }
