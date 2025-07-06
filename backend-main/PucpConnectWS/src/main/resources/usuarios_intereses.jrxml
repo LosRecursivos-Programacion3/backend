@@ -1,0 +1,134 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="usuarios_intereses" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8a7f1731-3109-4f0d-a42c-2aa058d43c98">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="PucpTest"/>
+	<style name="Title" forecolor="#FFFFFF" backcolor="#3366CC" fontName="Arial" fontSize="16.0" bold="true"/>
+	<style name="Subtitle" forecolor="#333333" fontName="Arial" fontSize="12.0"/>
+	<style name="TableHeader" mode="Opaque" forecolor="#FFFFFF" backcolor="#4285F4" fontName="Arial" fontSize="10.0" bold="true"/>
+	<style name="TableDetail" forecolor="#333333" fontName="Arial" fontSize="10.0"/>
+	<style name="Footer" forecolor="#4285F4" fontName="Arial" fontSize="10.0" bold="true"/>
+	<style name="ReportFooter" forecolor="#333333" fontName="Arial" fontSize="10.0" bold="true"/>
+	<query language="sql"><![CDATA[SELECT 
+            u.idUsuario,
+            u.nombre,
+            u.email,
+            IFNULL(a.carrera, 'No registrada') AS carrera,
+            DATE_FORMAT(u.fecha_Registro, '%d/%m/%Y %H:%i') AS fecha_registro,
+            CASE 
+                WHEN COUNT(ai.idInteres) = 0 THEN 'Ninguno'
+                WHEN GROUP_CONCAT(i.nombre) IS NULL THEN 'No registrado' 
+                ELSE GROUP_CONCAT(i.nombre ORDER BY i.nombre SEPARATOR ', ') 
+            END AS intereses,
+            COUNT(ai.idInteres) AS total_intereses
+        FROM 
+            Usuario u
+        JOIN 
+            Alumno a ON u.idUsuario = a.idUsuario
+        LEFT JOIN 
+            Alumno_Interes ai ON a.idUsuario = ai.idUsuario AND ai.estado = TRUE
+        LEFT JOIN 
+            Interes i ON ai.idInteres = i.idInteres AND i.estado = TRUE
+        WHERE 
+            u.estado = TRUE
+            AND u.visible = TRUE
+        GROUP BY 
+            u.idUsuario, u.nombre, u.email, a.carrera, u.fecha_Registro
+        ORDER BY 
+            u.fecha_Registro DESC]]></query>
+	<field name="idUsuario" class="java.lang.Integer"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="carrera" class="java.lang.String"/>
+	<field name="fecha_registro" class="java.lang.String"/>
+	<field name="intereses" class="java.lang.String"/>
+	<field name="total_intereses" class="java.lang.Integer"/>
+	<variable name="totalUsuarios" calculation="Count" class="java.lang.Integer">
+		<expression><![CDATA[$F{idUsuario}]]></expression>
+	</variable>
+	<title height="120">
+		<element kind="rectangle" uuid="fbc0e4aa-d7e2-430c-aae3-d2ee57af9013" x="0" y="0" width="555" height="50" backcolor="#3366CC">
+			<pen lineWidth="0.0"/>
+		</element>
+		<element kind="rectangle" uuid="259109c9-a204-4d02-b91f-8d4432fd4285" x="0" y="60" width="555" height="25" forecolor="#030303">
+			<pen lineWidth="0.0"/>
+		</element>
+		<element kind="staticText" uuid="a9c14bd6-fbaa-411e-9050-3764dd4c5aa6" x="10" y="10" width="190" height="30" forecolor="#FFFFFF" fontSize="22.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[PUCPCONNECT]]></text>
+		</element>
+		<element kind="staticText" uuid="99046e27-9b20-48bf-a9d6-f5012730eeeb" x="10" y="60" width="330" height="24" forecolor="#030303" fontSize="16.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[Reporte de Usuarios con Intereses]]></text>
+		</element>
+		<element kind="staticText" uuid="79f7917c-e80f-43ed-9795-6b94b660ebb6" x="300" y="90" width="100" height="20">
+			<text><![CDATA[Generado el:]]></text>
+		</element>
+		<element kind="textField" uuid="e6390ab9-cb2a-4ba6-b9f0-2ce2f89d56ea" x="400" y="90" width="155" height="20" fontSize="10.0" pattern="dd/MM/yyyy HH:mm">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+		<element kind="staticText" uuid="8a7f1731-3109-4f0d-a42c-2aa058d43c98" x="10" y="90" width="280" height="30">
+			<text><![CDATA[Reporte completo de usuarios con sus intereses registrados]]></text>
+		</element>
+	</title>
+	<columnHeader height="30">
+		<element kind="rectangle" uuid="4381378a-19ee-4888-af2f-9a2a0313531d" x="0" y="0" width="555" height="25">
+			<pen lineWidth="0.0"/>
+		</element>
+		<element kind="staticText" uuid="c467b466-83a7-406d-90f2-79c5f815eee9" x="-9" y="5" width="50" height="20" forecolor="#030303" fontSize="10.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[ID]]></text>
+		</element>
+		<element kind="staticText" uuid="51b24226-0e41-49ab-94c6-60f8f308f6c3" x="44" y="5" width="100" height="20" forecolor="#030303" fontSize="10.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[Nombre]]></text>
+		</element>
+		<element kind="staticText" uuid="07f9ad31-a87c-496b-93f8-8c05ae2e13bd" x="144" y="5" width="120" height="20" forecolor="#030303" fontSize="10.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[Email]]></text>
+		</element>
+		<element kind="staticText" uuid="96353fd3-5ff6-4f50-941a-503bf35678db" x="270" y="5" width="90" height="20" forecolor="#030303" fontSize="10.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[Carrera]]></text>
+		</element>
+		<element kind="staticText" uuid="1b0daf22-de56-40ee-84be-57cb25c6864f" x="380" y="2" width="100" height="20" forecolor="#030303" fontSize="10.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[Fecha Registro]]></text>
+		</element>
+		<element kind="staticText" uuid="debc168f-46a9-4802-9059-3defecfce4c7" x="470" y="5" width="95" height="20" forecolor="#030303" fontSize="10.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Total Intereses]]></text>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="25">
+			<element kind="textField" uuid="423ca5a8-ab02-43d7-aea2-7ecd46f9c69b" x="-8" y="5" width="50" height="20" fontSize="10.0" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{idUsuario}]]></expression>
+			</element>
+			<element kind="textField" uuid="0e80ab7b-cfdf-4740-b66b-abaeb54b2d23" x="45" y="5" width="100" height="20" fontSize="10.0" vTextAlign="Middle">
+				<expression><![CDATA[$F{nombre}]]></expression>
+			</element>
+			<element kind="textField" uuid="2c7fc2c8-aba5-4074-ba7f-a115f613cb1d" x="145" y="5" width="120" height="20" fontSize="10.0" vTextAlign="Middle">
+				<expression><![CDATA[$F{email}]]></expression>
+			</element>
+			<element kind="textField" uuid="a9c14bd6-fbaa-411e-9050-3764dd4c5aa6" x="270" y="5" width="130" height="20" fontSize="10.0" vTextAlign="Middle">
+				<expression><![CDATA[$F{carrera}]]></expression>
+			</element>
+			<element kind="textField" uuid="99046e27-9b20-48bf-a9d6-f5012730eeeb" x="380" y="5" width="100" height="20" fontSize="10.0" vTextAlign="Middle">
+				<expression><![CDATA[$F{fecha_registro}]]></expression>
+			</element>
+			<element kind="textField" uuid="1b0daf22-de56-40ee-84be-57cb25c6864f" x="490" y="5" width="95" height="20" fontSize="10.0" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{total_intereses}]]></expression>
+			</element>
+			<element kind="line" uuid="cc8650bf-b7fe-4161-b459-908d0a7f8da9" x="0" y="24" width="555" height="1">
+				<pen lineWidth="0.5" lineColor="#E0E0E0"/>
+			</element>
+		</band>
+	</detail>
+	<pageFooter height="30">
+		<element kind="textField" uuid="52b4f26d-ffaf-4457-ba05-ae4c32ae0784" x="455" y="10" width="100" height="20" fontSize="10.0" evaluationTime="Page" hTextAlign="Right">
+			<expression><![CDATA["Página " + $V{PAGE_NUMBER} + " de "]]></expression>
+		</element>
+		<element kind="textField" uuid="aca3df79-212e-4048-b537-13556652f75f" x="555" y="10" width="20" height="20" fontSize="10.0" evaluationTime="Report">
+			<expression><![CDATA[" " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+	</pageFooter>
+	<summary height="50">
+		<element kind="textField" uuid="a9c14bd6-fbaa-411e-9050-3764dd4c5aa6" x="0" y="10" width="555" height="20" fontSize="10.0" bold="true" hTextAlign="Right">
+			<expression><![CDATA["Total usuarios registrados: " + $V{totalUsuarios}]]></expression>
+		</element>
+		<element kind="textField" uuid="debc168f-46a9-4802-9059-3defecfce4c7" x="0" y="30" width="555" height="20" fontSize="10.0" bold="true" hTextAlign="Center">
+			<expression><![CDATA["© " + new java.text.SimpleDateFormat("yyyy").format(new java.util.Date()) + " - Todos los derechos reservados"]]></expression>
+		</element>
+	</summary>
+</jasperReport>

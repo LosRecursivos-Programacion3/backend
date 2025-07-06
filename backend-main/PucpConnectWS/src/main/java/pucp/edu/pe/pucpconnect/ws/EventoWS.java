@@ -1,0 +1,312 @@
+package pucp.edu.pe.pucpconnect.ws;
+
+import jakarta.jws.WebService;
+import jakarta.jws.WebMethod;
+import jakarta.jws.WebParam;
+import jakarta.xml.ws.WebServiceException;
+import java.sql.SQLException;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import pucp.edu.pe.pucpconnect.business.AlumnoService;
+
+import pucp.edu.pe.pucpconnect.business.EventoService;
+import pucp.edu.pe.pucpconnect.business.UsuarioService;
+import pucp.edu.pe.pucpconnect.business.impl.AlumnoServiceImpl;
+import pucp.edu.pe.pucpconnect.business.impl.EventoServiceImpl;
+import pucp.edu.pe.pucpconnect.business.impl.UsuarioServiceImpl;
+import pucp.edu.pe.pucpconnect.domain.Social.Evento;
+import pucp.edu.pe.pucpconnect.domain.Usuarios.Alumno;
+import pucp.edu.pe.pucpconnect.domain.Usuarios.Interes;
+import pucp.edu.pe.pucpconnect.domain.Usuarios.Usuario;
+import pucp.edu.pe.pucpconnect.persistence.BaseDAO;
+import pucp.edu.pe.pucpconnect.persistence.daoimpl.Social.EventoDAOImpl;
+import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.AlumnoDAOImpl;
+import pucp.edu.pe.pucpconnect.persistence.daoimpl.Usuarios.UsuarioDAOImpl;
+
+@WebService(serviceName = "EventoWS")
+public class EventoWS {
+
+    private final EventoService eventoService;
+    private final EventoService eventSer;
+    private final AlumnoService alumnoService;
+    private final UsuarioService usuarioService;
+
+    public EventoWS() {
+        BaseDAO<Evento> eventoDAO = new EventoDAOImpl();
+        this.eventoService = new EventoServiceImpl(eventoDAO);
+        BaseDAO<Alumno> alumnoDAO = new AlumnoDAOImpl();
+        this.alumnoService = new AlumnoServiceImpl(alumnoDAO);
+        this.eventSer = new EventoServiceImpl();
+        BaseDAO<Usuario> usuarioDAO = new UsuarioDAOImpl();
+        usuarioService = new UsuarioServiceImpl(usuarioDAO);
+    }
+
+   
+    @WebMethod(operationName = "crearEvento")
+    public boolean crearEvento(
+            @WebParam(name = "nombre") String nombre,
+            @WebParam(name = "descripcion") String descripcion,
+            @WebParam(name = "fecha") String fechaStr,
+            @WebParam(name = "fechaFin") String fechaFinStr,
+            @WebParam(name = "ubicacion") String ubicacion,
+            @WebParam(name = "creadorId") int creadorId,
+            @WebParam(name = "interesesIds") String interesesIdsStr,
+            @WebParam(name = "imagen") String imagen) {
+        
+
+        try {
+            // Validar que el string de intereses no sea nulo o vacío
+            if (interesesIdsStr == null || interesesIdsStr.trim().isEmpty()) {
+                throw new WebServiceException("La lista de intereses no puede estar vacía");
+            }
+
+            // Convertir String a List<Integer> con manejo de errores
+            List<Integer> interesesIds;
+            try {
+                interesesIds = Arrays.stream(interesesIdsStr.split(","))
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .map(Integer::parseInt)
+                        .collect(Collectors.toList());
+            } catch (NumberFormatException e) {
+                throw new WebServiceException("Formato inválido para interesesIds: debe ser números separados por comas", e);
+            }
+
+            // Validar que se obtuvieron intereses
+            if (interesesIds.isEmpty()) {
+                throw new WebServiceException("Debe especificar al menos un interés");
+            }
+
+            // Crear y configurar evento
+            Evento evento = new Evento();
+            evento.setNombre(nombre);
+            evento.setDescripcion(descripcion);
+
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime fecha = LocalDateTime.parse(fechaStr, formatter);
+                LocalDateTime fechaFin = LocalDateTime.parse(fechaFinStr, formatter);
+
+                evento.setFecha(fecha);
+                evento.setFechaFin(fechaFin);
+            } catch (DateTimeParseException e) {
+                throw new WebServiceException("Formato de fecha inválido. Use yyyy-MM-dd HH:mm:ss", e);
+            }
+
+            evento.setUbicacion(ubicacion);
+            evento.setEstado(true);
+            evento.setImagen(imagen);
+            Alumno creador = alumnoService.buscarPorId(creadorId);
+            if (creador == null) {
+                throw new WebServiceException("No se encontró el alumno creador con ID: " + creadorId);
+            }
+            evento.setCreador(creador);
+
+            // Guardar evento e intereses
+            
+            eventoService.crearEvento(evento, interesesIds);
+            eventSer.registrar_Participacion_Evento(evento, creador);
+            return true;
+
+        } catch (Exception e) {
+            throw new WebServiceException("Error al crear evento: " + e.getMessage(), e);
+        }
+    }
+
+    @WebMethod(operationName = "unirseAEvento")
+    public boolean unirseAEvento(
+            @WebParam(name = "idEvento") int idEvento,
+            @WebParam(name = "idAlumno") int idAlumno
+    ) {
+        try {
+            Evento evento = eventoService.buscarPorId(idEvento);
+            Alumno alumno = new Alumno();
+            alumno.setId(idAlumno);
+
+            eventoService.unirseAEvento(evento, alumno);
+            return true;
+        } catch (Exception e) {
+            throw new WebServiceException("Error al unirse al evento: " + e.getMessage(), e);
+        }
+    }
+
+    @WebMethod(operationName = "cancelarParticipacion")
+    public boolean cancelarParticipacion(
+            @WebParam(name = "idEvento") int idEvento,
+            @WebParam(name = "idAlumno") int idAlumno
+    ) {
+        try {
+            Evento evento = eventoService.buscarPorId(idEvento);
+            Alumno alumno = new Alumno();
+            alumno.setId(idAlumno);
+
+            eventoService.cancelarParticipacion(evento, alumno);
+            return true;
+        } catch (Exception e) {
+            throw new WebServiceException("Error al cancelar participación: " + e.getMessage(), e);
+        }
+    }
+
+    @WebMethod(operationName = "listarEventos")
+    public List<Evento> listarEventos() {
+        try {
+            List<Evento> eventos = eventSer.listarEventos();
+
+            return eventos;
+        } catch (Exception e) {
+            throw new WebServiceException("Error al listar eventos: " + e.getMessage(), e);
+        }
+    }
+
+    @WebMethod(operationName = "buscarEventoPorId")
+    public Evento buscarEventoPorId(@WebParam(name = "idEvento") int idEvento) {
+        try {
+            Evento evento =  eventoService.buscarPorId(idEvento);
+            evento.setCreador(alumnoService.buscarPorId(evento.getCreador().getId()));
+            return evento;
+        } catch (Exception e) {
+            throw new WebServiceException("Error al buscar evento por ID: " + e.getMessage(), e);
+        }
+    }
+
+    @WebMethod(operationName = "verificarParticipacionEvento")
+    public boolean verificarParticipacionEvento(
+            @WebParam(name = "idEvento") int idEvento,
+            @WebParam(name = "idUsuario") int idUsuario) {
+        try {
+
+            return eventSer.verificarParticipacion(idEvento, idUsuario);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al verificar participación: " + e.getMessage(), e);
+        }
+    }
+
+    @WebMethod(operationName = "registrarParticipacionEvento")
+    public boolean registrarParticipacionEvento(
+            @WebParam(name = "idEvento") int idEvento,
+            @WebParam(name = "idAlumno") int idAlumno) {
+        try {
+
+            Evento evento = eventoService.buscarPorId(idEvento);
+
+            Alumno alumno = alumnoService.buscarPorIdUsuario(idAlumno);
+            
+            eventSer.registrar_Participacion_Evento(evento, alumno);
+            return true;
+        } catch (Exception e) {
+            throw new WebServiceException("Error al registrar participación en evento: " + e.getMessage(), e);
+        }
+    }
+
+    @WebMethod(operationName = "listarParticipantesPorEvento")
+    public List<Alumno> listarParticipantesPorEvento(
+            @WebParam(name = "idEvento") int idEvento) {
+
+        try {
+            return eventSer.listarParticipantesPorEvento(idEvento);
+        } catch (SQLException e) {
+            throw new WebServiceException("Error al listar participantes del evento: " + e.getMessage(), e);
+        }
+    }
+
+    @WebMethod(operationName = "cancelarParticipacionEvento")
+    public boolean cancelarParticipacionEvento(
+            @WebParam(name = "idEvento") int idEvento,
+            @WebParam(name = "idUsuario") int idUsuario) {
+        try {
+
+            return eventSer.cancelarParticipacion(idEvento, idUsuario);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al cancelar participación: " + e.getMessage(), e);
+        }
+    }
+
+    @WebMethod(operationName = "listarInteresesPorEvento")
+    public List<Interes> listarInteresesPorEvento(
+            @WebParam(name = "idEvento") int idEvento) {
+        try {
+            return eventSer.listarInteresesPorEvento(idEvento);
+        } catch (Exception e) {
+            throw new WebServiceException("Error al listar eventos con intereses: " + e.getMessage(), e);
+        }
+    }
+    
+    @WebMethod(operationName = "listarEventosPorInteres")
+    public List<Evento> listarEventosPorIntereses(
+            @WebParam(name = "idEvento") int idInteres) {
+        try {
+            return eventSer.listarEventosPorInteres(idInteres);
+        } catch (SQLException e) {
+            throw new WebServiceException("Error al listar eventos con intereses: " + e.getMessage(), e);
+        }
+    }
+    
+    @WebMethod(operationName = "ObtenerAlumno")
+    public Alumno ObtenerAlumno(@WebParam (name = "idCreador")int id){
+        try{
+            return alumnoService.buscarPorId(id);
+        } catch (Exception ex) {
+            Logger.getLogger(EventoWS.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+        return null;
+    }
+    
+    
+    
+    /*Agregado hoy, se modifico crearEvento*/
+    
+     @WebMethod(operationName = "listarEventosPorFechaInicio")
+    public List<Evento> listarEventosPorFechaInicio(
+            @WebParam(name = "fechaInicio") String fechaInicioStr) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime fechaInicio = LocalDateTime.parse(fechaInicioStr, formatter);
+            return eventSer.listarEventosPorFechaInicio(fechaInicio);
+        } catch (DateTimeParseException e) {
+            throw new WebServiceException("Formato de fecha inválido. Use yyyy-MM-dd HH:mm:ss");
+        } catch (Exception e) {
+            throw new WebServiceException("Error al listar eventos: " + e.getMessage());
+        }
+    }
+
+    @WebMethod(operationName = "listarEventosPorRangoFechas")
+    public List<Evento> listarEventosPorRangoFechas(
+            @WebParam(name = "fechaInicio") String fechaInicioStr,
+            @WebParam(name = "fechaFin") String fechaFinStr) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime fechaInicio = LocalDateTime.parse(fechaInicioStr, formatter);
+            LocalDateTime fechaFin = LocalDateTime.parse(fechaFinStr, formatter);
+            
+            if (fechaFin.isBefore(fechaInicio)) {
+                throw new WebServiceException("La fecha fin no puede ser anterior a la fecha de inicio");
+            }
+            
+            return eventSer.listarEventosPorRangoFechas(fechaInicio, fechaFin);
+        } catch (DateTimeParseException e) {
+            throw new WebServiceException("Formato de fecha inválido. Use yyyy-MM-dd HH:mm:ss");
+        } catch (WebServiceException e) {
+            throw new WebServiceException("Error al listar eventos: " + e.getMessage());
+        }
+    }
+
+    @WebMethod(operationName = "actualizarEstadosEventos")
+    public String actualizarEstadosEventos() {
+        try {
+            boolean eventosActualizados = eventSer.actualizarEstadosEventos();
+            if(eventosActualizados)
+            return "Se actualizaron " + eventosActualizados + " eventos correctamente";
+        } catch (Exception e) {
+            throw new WebServiceException("Error al actualizar estados: " + e.getMessage());
+        }
+        return "No se actualizaron";
+    }
+}
